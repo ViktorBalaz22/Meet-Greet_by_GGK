@@ -27,7 +27,7 @@ export default function LoginPage() {
       } else {
         setMessage('Skontrolujte svoj e-mail pre prihlasovací odkaz!')
       }
-    } catch (error) {
+    } catch {
       setMessage('Nastala neočakávaná chyba')
     } finally {
       setLoading(false)

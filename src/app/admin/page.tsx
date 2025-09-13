@@ -5,7 +5,7 @@ import Navigation from '@/components/Navigation'
 
 export default async function AdminPage() {
   try {
-    const { user, profile } = await requireAdmin()
+    await requireAdmin()
     
     return (
       <div className="min-h-screen bg-gray-50">
@@ -23,7 +23,7 @@ export default async function AdminPage() {
         </div>
       </div>
     )
-  } catch (error) {
+  } catch {
     redirect('/app')
   }
 }

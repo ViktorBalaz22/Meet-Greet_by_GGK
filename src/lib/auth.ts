@@ -2,8 +2,8 @@ import { createServerClient as createClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { Profile, User } from './types'
 
-export function createServerClient() {
-  const cookieStore = cookies()
+export async function createServerClient() {
+  const cookieStore = await cookies()
 
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -25,7 +25,7 @@ export function createServerClient() {
 }
 
 export async function getUser(): Promise<User | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) return null
@@ -38,7 +38,7 @@ export async function getUser(): Promise<User | null> {
 }
 
 export async function getProfile(userId: string): Promise<Profile | null> {
-  const supabase = createServerClient()
+  const supabase = await createServerClient()
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')

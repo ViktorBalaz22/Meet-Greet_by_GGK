@@ -26,7 +26,7 @@ Jednoduchá webová aplikácia pre zdieľanie digitálnych vizitiek na eventoch.
 1. **Klonujte repozitár**
    ```bash
    git clone <repository-url>
-   cd event-business-cards
+   cd meet-greet-by-ggk
    ```
 
 2. **Nainštalujte závislosti**

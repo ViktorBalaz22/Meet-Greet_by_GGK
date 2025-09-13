@@ -17,7 +17,7 @@ Tento dokument obsahuje presný postup nasadenia aplikácie do produkčného pro
 2. **Kliknite "New Project"**
 3. **Vyplňte údaje:**
    - Organization: Vyberte existujúcu alebo vytvorte novú
-   - Project name: `event-business-cards-prod`
+   - Project name: `meet-greet-by-ggk-prod`
    - Database Password: Vygenerujte silné heslo (uložte si ho!)
    - Region: **Vyberte EU región** (Frankfurt, London, alebo Paris)
 4. **Kliknite "Create new project"**
@@ -81,13 +81,13 @@ Storage policies sa vytvoria automaticky cez migrácie, ale skontrolujte ich:
 1. **Prihláste sa na [vercel.com](https://vercel.com)**
 2. **Kliknite "New Project"**
 3. **Importujte GitHub repozitár:**
-   - Vyberte váš repozitár `event-business-cards`
+   - Vyberte váš repozitár `Meet-Greet_by_GGK`
    - Framework Preset: **Next.js**
    - Root Directory: `./` (alebo nechajte prázdne)
 
 ### 2.2 Konfigurácia projektu
 
-1. **Project Name:** `event-business-cards` (alebo váš názov)
+1. **Project Name:** `meet-greet-by-ggk` (alebo váš názov)
 2. **Framework:** Next.js
 3. **Root Directory:** `./`
 4. **Build Command:** `npm run build` (automaticky)

@@ -14,3 +14,4 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
     persistSession: false
   }
 })
+// Force redeploy Sat Sep 13 11:23:36 CEST 2025

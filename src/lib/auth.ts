@@ -2,7 +2,7 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { Profile, User } from './types'
 
-export function createClient() {
+export function createServerClient() {
   const cookieStore = cookies()
 
   return createClient(
@@ -19,7 +19,7 @@ export function createClient() {
 }
 
 export async function getUser(): Promise<User | null> {
-  const supabase = createClient()
+  const supabase = createServerClient()
   const { data: { user } } = await supabase.auth.getUser()
   
   if (!user) return null
@@ -32,7 +32,7 @@ export async function getUser(): Promise<User | null> {
 }
 
 export async function getProfile(userId: string): Promise<Profile | null> {
-  const supabase = createClient()
+  const supabase = createServerClient()
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')

@@ -16,26 +16,25 @@ export default function ProfileDetail({ profile }: ProfileDetailProps) {
 
   // Get photo URL from Supabase Storage
   useEffect(() => {
-    if (profile.photo_path) {
+    if (profile.photo_url) {
       const { data } = supabase.storage
         .from('photos')
-        .getPublicUrl(profile.photo_path)
+        .getPublicUrl(profile.photo_url)
       setPhotoUrl(data.publicUrl)
     }
-  }, [profile.photo_path])
+  }, [profile.photo_url])
 
   const handleDownloadVCard = () => {
     // Generate vCard content
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:${profile.first_name} ${profile.last_name}
-N:${profile.last_name};${profile.first_name};;;
+FN:${profile.full_name}
+N:${profile.full_name};;;
 ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
-URL:${profile.linkedin_url || ''}
-NOTE:${profile.about || ''}
+NOTE:${profile.bio || ''}
 END:VCARD`
 
     // Create and download file
@@ -43,7 +42,7 @@ END:VCARD`
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `${profile.last_name}_${profile.company}.vcf`
+    link.download = `${profile.full_name.replace(/\s+/g, '_')}_${profile.company}.vcf`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -98,7 +97,7 @@ END:VCARD`
                 <img
                   className="h-32 w-32 rounded-full object-cover mx-auto md:mx-0"
                   src={photoUrl}
-                  alt={`${profile.first_name} ${profile.last_name}`}
+                  alt={profile.full_name}
                 />
               ) : (
                 <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto md:mx-0">
@@ -112,7 +111,7 @@ END:VCARD`
             {/* Details */}
             <div className="flex-1 text-center md:text-left">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                {profile.first_name} {profile.last_name}
+                {profile.full_name}
               </h2>
               <p className="text-xl text-gray-600 mb-4">
                 {profile.position} {profile.position && profile.company && '•'} {profile.company}
@@ -134,28 +133,13 @@ END:VCARD`
                   </svg>
                   <span className="text-gray-700">{profile.email}</span>
                 </div>
-                {profile.linkedin_url && (
-                  <div className="flex items-center justify-center md:justify-start space-x-3">
-                    <svg className="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-                    </svg>
-                    <a
-                      href={profile.linkedin_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-600 hover:text-blue-500"
-                    >
-                      LinkedIn profil
-                    </a>
-                  </div>
-                )}
               </div>
 
               {/* About */}
-              {profile.about && (
+              {profile.bio && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">O mne</h3>
-                  <p className="text-gray-700 leading-relaxed">{profile.about}</p>
+                  <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
                 </div>
               )}
 

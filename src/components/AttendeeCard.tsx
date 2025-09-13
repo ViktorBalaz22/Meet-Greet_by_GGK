@@ -36,6 +36,7 @@ ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
+URL:${profile.linkedin_url || ''}
 NOTE:${profile.bio || ''}
 END:VCARD`
 
@@ -135,12 +136,22 @@ END:VCARD`
           </div>
 
           {/* Additional info */}
-          {(profile.phone || profile.bio) && (
+          {(profile.phone || profile.linkedin_url || profile.bio) && (
             <div className="mt-2 space-y-1">
               {profile.phone && (
                 <p className="text-sm text-gray-600">
                   <span className="font-medium">Tel:</span> {profile.phone}
                 </p>
+              )}
+              {profile.linkedin_url && (
+                <a
+                  href={profile.linkedin_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-blue-600 hover:text-blue-500"
+                >
+                  LinkedIn profil
+                </a>
               )}
               {profile.bio && (
                 <p className="text-sm text-gray-600 mt-2">

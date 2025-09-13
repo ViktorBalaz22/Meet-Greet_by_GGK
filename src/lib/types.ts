@@ -6,6 +6,7 @@ export interface Profile {
   company: string | null
   position: string | null
   phone: string | null
+  linkedin_url: string | null
   bio: string | null
   photo_url: string | null
   is_admin: boolean

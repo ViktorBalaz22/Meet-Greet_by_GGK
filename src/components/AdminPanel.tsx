@@ -49,7 +49,7 @@ export default function AdminPanel() {
   }
 
   const exportCSV = () => {
-    const headers = ['Celé meno', 'Spoločnosť', 'Pozícia', 'E-mail', 'Telefón', 'O mne', 'Dátum vytvorenia']
+    const headers = ['Celé meno', 'Spoločnosť', 'Pozícia', 'E-mail', 'Telefón', 'LinkedIn', 'O mne', 'Dátum vytvorenia']
     
     const csvContent = [
       headers.join(','),
@@ -59,6 +59,7 @@ export default function AdminPanel() {
         `"${profile.position || ''}"`,
         `"${profile.email}"`,
         `"${profile.phone || ''}"`,
+        `"${profile.linkedin_url || ''}"`,
         `"${profile.bio || ''}"`,
         `"${new Date(profile.created_at).toLocaleDateString('sk-SK')}"`
       ].join(','))
@@ -83,6 +84,7 @@ ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
+URL:${profile.linkedin_url || ''}
 NOTE:${profile.bio || ''}
 END:VCARD`
     }).join('\n\n')

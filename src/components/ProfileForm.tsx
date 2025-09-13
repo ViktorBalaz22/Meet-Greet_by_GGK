@@ -19,6 +19,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     company: profile?.company || '',
     position: profile?.position || '',
     phone: profile?.phone || '',
+    linkedin_url: profile?.linkedin_url || '',
     bio: profile?.bio || '',
     gdpr_consent: profile?.gdpr_consent || false,
   })
@@ -170,6 +171,19 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           />
         </div>
 
+        <div>
+          <label htmlFor="linkedin_url" className="block text-sm font-medium text-gray-700 mb-2">
+            LinkedIn URL
+          </label>
+          <input
+            type="url"
+            id="linkedin_url"
+            name="linkedin_url"
+            value={formData.linkedin_url}
+            onChange={handleInputChange}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
       </div>
 
       <div>

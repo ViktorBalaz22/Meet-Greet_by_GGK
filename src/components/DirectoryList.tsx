@@ -19,7 +19,7 @@ export default function DirectoryList() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('hidden', false)
+        .eq('is_hidden', false)
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -43,8 +43,8 @@ export default function DirectoryList() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('hidden', false)
-        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,about.ilike.%${query}%`)
+        .eq('is_hidden', false)
+        .or(`full_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,bio.ilike.%${query}%`)
         .order('created_at', { ascending: false })
 
       if (error) throw error

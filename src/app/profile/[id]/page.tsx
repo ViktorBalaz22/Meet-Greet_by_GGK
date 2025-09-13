@@ -16,7 +16,7 @@ async function getProfile(id: string): Promise<Profile | null> {
       .from('profiles')
       .select('*')
       .eq('id', id)
-      .eq('hidden', false)
+      .eq('is_hidden', false)
       .single()
 
     if (error || !data) return null

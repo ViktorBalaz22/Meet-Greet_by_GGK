@@ -32,14 +32,14 @@ export default function AdminPanel() {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ hidden: !currentHidden })
+        .update({ is_hidden: !currentHidden })
         .eq('id', profileId)
 
       if (error) throw error
 
       setProfiles(profiles.map(profile => 
         profile.id === profileId 
-          ? { ...profile, hidden: !currentHidden }
+          ? { ...profile, is_hidden: !currentHidden }
           : profile
       ))
     } catch (error) {

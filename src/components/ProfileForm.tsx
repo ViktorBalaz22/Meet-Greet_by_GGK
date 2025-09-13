@@ -96,7 +96,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           id: user.id,
           email: user.email!,
           ...formData,
-          photo_path: photoPath,
+          photo_url: photoPath,
         })
 
       if (error) throw error

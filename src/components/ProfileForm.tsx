@@ -70,7 +70,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       const user = (await supabase.auth.getUser()).data.user
       if (!user) throw new Error('Nie ste prihlásený')
 
-      let photoPath = profile?.photo_path
+      let photoPath = profile?.photo_url
 
       // Upload photo if provided
       if (photoFile) {

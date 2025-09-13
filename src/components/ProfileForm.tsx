@@ -104,8 +104,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
       setMessage('Profil bol úspešne uložený!')
       router.refresh()
-    } catch (error: any) {
-      setMessage('Chyba pri ukladaní profilu: ' + error.message)
+    } catch (error: unknown) {
+      setMessage('Chyba pri ukladaní profilu: ' + (error instanceof Error ? error.message : 'Neznáma chyba'))
     } finally {
       setLoading(false)
     }

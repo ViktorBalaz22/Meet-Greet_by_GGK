@@ -152,3 +152,4 @@ npm run lint
 ## Licencia
 
 MIT License# Trigger redeploy
+# Vercel Cache Buster - Sat Sep 13 11:29:01 CEST 2025

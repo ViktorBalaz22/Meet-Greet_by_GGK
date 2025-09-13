@@ -15,14 +15,12 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
   const [message, setMessage] = useState('')
   
   const [formData, setFormData] = useState({
-    first_name: profile?.first_name || '',
-    last_name: profile?.last_name || '',
+    full_name: profile?.full_name || '',
     company: profile?.company || '',
     position: profile?.position || '',
     phone: profile?.phone || '',
-    linkedin_url: profile?.linkedin_url || '',
-    about: profile?.about || '',
-    agreed_gdpr: profile?.agreed_gdpr || false,
+    bio: profile?.bio || '',
+    gdpr_consent: profile?.gdpr_consent || false,
   })
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
@@ -114,31 +112,16 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
-            Meno *
+        <div className="md:col-span-2">
+          <label htmlFor="full_name" className="block text-sm font-medium text-gray-700 mb-2">
+            Celé meno *
           </label>
           <input
             type="text"
-            id="first_name"
-            name="first_name"
+            id="full_name"
+            name="full_name"
             required
-            value={formData.first_name}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">
-            Priezvisko *
-          </label>
-          <input
-            type="text"
-            id="last_name"
-            name="last_name"
-            required
-            value={formData.last_name}
+            value={formData.full_name}
             onChange={handleInputChange}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -187,30 +170,17 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
           />
         </div>
 
-        <div>
-          <label htmlFor="linkedin_url" className="block text-sm font-medium text-gray-700 mb-2">
-            LinkedIn URL
-          </label>
-          <input
-            type="url"
-            id="linkedin_url"
-            name="linkedin_url"
-            value={formData.linkedin_url}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
       </div>
 
       <div>
-        <label htmlFor="about" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">
           O mne / Hobby
         </label>
         <textarea
-          id="about"
-          name="about"
+          id="bio"
+          name="bio"
           rows={3}
-          value={formData.about}
+          value={formData.bio}
           onChange={handleInputChange}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -241,17 +211,17 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       <div className="flex items-start">
         <div className="flex items-center h-5">
           <input
-            id="agreed_gdpr"
-            name="agreed_gdpr"
+            id="gdpr_consent"
+            name="gdpr_consent"
             type="checkbox"
             required
-            checked={formData.agreed_gdpr}
+            checked={formData.gdpr_consent}
             onChange={handleInputChange}
             className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
           />
         </div>
         <div className="ml-3 text-sm">
-          <label htmlFor="agreed_gdpr" className="text-gray-700">
+          <label htmlFor="gdpr_consent" className="text-gray-700">
             Súhlasím so spracovaním osobných údajov v súlade s GDPR *
           </label>
         </div>

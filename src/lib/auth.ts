@@ -13,10 +13,10 @@ export function createServerClient() {
         get(name: string) {
           return cookieStore.get(name)?.value
         },
-        set(name: string, value: string, options: any) {
+        set(name: string, value: string, options: unknown) {
           cookieStore.set(name, value, options)
         },
-        remove(name: string, options: any) {
+        remove(name: string, options: unknown) {
           cookieStore.delete(name, options)
         },
       },

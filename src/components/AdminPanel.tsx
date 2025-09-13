@@ -49,19 +49,17 @@ export default function AdminPanel() {
   }
 
   const exportCSV = () => {
-    const headers = ['Meno', 'Priezvisko', 'Spoločnosť', 'Pozícia', 'E-mail', 'Telefón', 'LinkedIn', 'O mne', 'Dátum vytvorenia']
+    const headers = ['Celé meno', 'Spoločnosť', 'Pozícia', 'E-mail', 'Telefón', 'O mne', 'Dátum vytvorenia']
     
     const csvContent = [
       headers.join(','),
       ...profiles.map(profile => [
-        `"${profile.first_name || ''}"`,
-        `"${profile.last_name || ''}"`,
+        `"${profile.full_name || ''}"`,
         `"${profile.company || ''}"`,
         `"${profile.position || ''}"`,
         `"${profile.email}"`,
         `"${profile.phone || ''}"`,
-        `"${profile.linkedin_url || ''}"`,
-        `"${profile.about || ''}"`,
+        `"${profile.bio || ''}"`,
         `"${new Date(profile.created_at).toLocaleDateString('sk-SK')}"`
       ].join(','))
     ].join('\n')
@@ -79,14 +77,13 @@ export default function AdminPanel() {
     const vcards = profiles.map(profile => {
       return `BEGIN:VCARD
 VERSION:3.0
-FN:${profile.first_name} ${profile.last_name}
-N:${profile.last_name};${profile.first_name};;;
+FN:${profile.full_name}
+N:${profile.full_name};;;
 ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
-URL:${profile.linkedin_url || ''}
-NOTE:${profile.about || ''}
+NOTE:${profile.bio || ''}
 END:VCARD`
     }).join('\n\n')
 
@@ -149,7 +146,7 @@ END:VCARD`
                 <div className="flex-1">
                   <div className="flex items-center space-x-3">
                     <h3 className="text-lg font-medium text-gray-900">
-                      {profile.first_name} {profile.last_name}
+                      {profile.full_name}
                     </h3>
                     {profile.is_admin && (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
@@ -172,14 +169,14 @@ END:VCARD`
                 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => toggleHidden(profile.id, profile.hidden)}
+                    onClick={() => toggleHidden(profile.id, profile.is_hidden)}
                     className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium ${
-                      profile.hidden
+                      profile.is_hidden
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'
                         : 'bg-red-100 text-red-800 hover:bg-red-200'
                     }`}
                   >
-                    {profile.hidden ? 'Zobraziť' : 'Skryť'}
+                    {profile.is_hidden ? 'Zobraziť' : 'Skryť'}
                   </button>
                 </div>
               </div>

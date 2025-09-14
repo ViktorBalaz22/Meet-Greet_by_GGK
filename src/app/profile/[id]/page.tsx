@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createServerClient } from '@/lib/auth'
 import { Profile } from '@/lib/types'
 import ProfileDetail from '@/components/ProfileDetail'
 import Navigation from '@/components/Navigation'
@@ -12,6 +12,7 @@ interface ProfilePageProps {
 
 async function getProfile(id: string): Promise<Profile | null> {
   try {
+    const supabase = await createServerClient()
     const { data, error } = await supabase
       .from('profiles')
       .select('*')

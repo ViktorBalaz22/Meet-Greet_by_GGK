@@ -13,9 +13,6 @@ export default function LoginPage() {
   useEffect(() => {
     // Use production URL if available, otherwise fall back to current origin
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-    console.log('Environment variable NEXT_PUBLIC_APP_URL:', process.env.NEXT_PUBLIC_APP_URL)
-    console.log('Base URL being used:', baseUrl)
-    console.log('Final redirect URL:', `${baseUrl}/app`)
     setRedirectUrl(`${baseUrl}/app`)
   }, [])
 

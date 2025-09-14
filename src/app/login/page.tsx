@@ -13,7 +13,7 @@ export default function LoginPage() {
   useEffect(() => {
     // Use production URL if available, otherwise fall back to current origin
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-    setRedirectUrl(`${baseUrl}/app`)
+    setRedirectUrl(`${baseUrl}/auth/callback`)
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {

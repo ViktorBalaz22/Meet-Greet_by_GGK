@@ -11,7 +11,9 @@ export default function LoginPage() {
   const [redirectUrl, setRedirectUrl] = useState('')
 
   useEffect(() => {
-    setRedirectUrl(`${window.location.origin}/app`)
+    // Use production URL if available, otherwise fall back to current origin
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+    setRedirectUrl(`${baseUrl}/app`)
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {

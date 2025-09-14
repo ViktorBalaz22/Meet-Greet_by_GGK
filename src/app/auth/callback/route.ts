@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     if (accessToken && refreshToken) {
       console.log('Tokens found in hash, creating session')
       
-      let response = NextResponse.redirect(`${origin}${next}`)
+      const response = NextResponse.redirect(`${origin}${next}`)
       
       const supabase = createServerClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!,

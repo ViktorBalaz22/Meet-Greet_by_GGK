@@ -26,10 +26,13 @@ export async function GET(request: NextRequest) {
       }
     )
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
     
     if (!error) {
+      console.log('Auth callback success:', data.user?.email)
       return response
+    } else {
+      console.log('Auth callback error:', error.message)
     }
   }
 

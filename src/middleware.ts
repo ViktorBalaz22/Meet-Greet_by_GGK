@@ -33,17 +33,24 @@ export async function middleware(request: NextRequest) {
 
   const { data: { user } } = await supabase.auth.getUser()
 
+  // Debug logging
+  if (request.nextUrl.pathname === '/app' || request.nextUrl.pathname === '/login') {
+    console.log(`Middleware: ${request.nextUrl.pathname}, User: ${user ? user.email : 'Not authenticated'}`)
+  }
+
   // Protected routes
   if (request.nextUrl.pathname.startsWith('/app') || 
       request.nextUrl.pathname.startsWith('/profile') ||
       request.nextUrl.pathname.startsWith('/admin')) {
     if (!user) {
+      console.log(`Redirecting to login from ${request.nextUrl.pathname} - no user`)
       return NextResponse.redirect(new URL('/login', request.url))
     }
   }
 
   // Redirect authenticated users away from login
   if (request.nextUrl.pathname === '/login' && user) {
+    console.log(`Redirecting authenticated user to /app from login`)
     return NextResponse.redirect(new URL('/app', request.url))
   }
 

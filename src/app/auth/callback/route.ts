@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  // Return the user to an error page with instructions
-  console.log('No code provided, redirecting to login with error')
-  return NextResponse.redirect(`${origin}/login?error=Could not authenticate user`)
+  // If no code and no hash, this might be a direct access - redirect to login
+  console.log('No code or hash provided, redirecting to login')
+  return NextResponse.redirect(`${origin}/login`)
 }

@@ -82,7 +82,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         aud: user.aud 
       })
 
-      let photoPath = profile?.photo_path
+      const photoPath = profile?.photo_path
 
       // Skip photo upload for now to avoid RLS issues
       // TODO: Implement photo upload via API route with service role key

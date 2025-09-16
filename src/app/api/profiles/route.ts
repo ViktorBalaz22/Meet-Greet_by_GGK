@@ -5,8 +5,6 @@ export async function POST(request: NextRequest) {
   try {
     const profileData = await request.json()
     
-    const response = NextResponse.json({ success: true })
-
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -16,9 +14,7 @@ export async function POST(request: NextRequest) {
             return request.cookies.getAll()
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options)
-            })
+            // We'll set cookies after we create the response
           },
         },
       }
@@ -31,6 +27,9 @@ export async function POST(request: NextRequest) {
       console.error('User authentication error:', userError)
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
     }
+
+    // Create response after we know user is authenticated
+    const response = NextResponse.json({ success: true })
 
     console.log('Server-side user authentication:', { 
       id: user.id, 
@@ -48,12 +47,20 @@ export async function POST(request: NextRequest) {
     console.log('Server-side profile data:', profileToInsert)
 
     // Insert/update the profile using server-side client
+    console.log('Attempting to upsert profile with data:', profileToInsert)
+    
     const { data, error } = await supabase
       .from('profiles')
       .upsert(profileToInsert)
 
     if (error) {
       console.error('Database error:', error)
+      console.error('Error details:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code
+      })
       return NextResponse.json({ error: error.message }, { status: 400 })
     }
 

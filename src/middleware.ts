@@ -31,11 +31,12 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const { data: { user }, error: userError } = await supabase.auth.getUser()
 
   // Debug logging
   if (request.nextUrl.pathname === '/app' || request.nextUrl.pathname === '/login') {
-    console.log(`Middleware: ${request.nextUrl.pathname}, User: ${user ? user.email : 'Not authenticated'}`)
+    console.log(`Middleware: ${request.nextUrl.pathname}, User: ${user ? user.email : 'Not authenticated'}, Error: ${userError?.message || 'None'}`)
+    console.log('Available cookies:', request.cookies.getAll().map(c => c.name))
   }
 
   // Protected routes

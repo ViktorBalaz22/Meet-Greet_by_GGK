@@ -41,7 +41,8 @@ export default function AuthCallbackPage() {
         }
 
         // Set the session using the tokens
-        const { error: sessionError } = await supabase.auth.setSession({
+        console.log('Attempting to set session with tokens')
+        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
           access_token: accessToken,
           refresh_token: refreshToken
         })
@@ -52,7 +53,17 @@ export default function AuthCallbackPage() {
           return
         }
 
-        console.log('Session set successfully, redirecting to app')
+        console.log('Session set successfully:', sessionData)
+        
+        // Verify the session was actually set
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        if (userError || !user) {
+          console.error('Failed to get user after session set:', userError)
+          setError('Session established but user not found: ' + (userError?.message || 'Unknown error'))
+          return
+        }
+
+        console.log('User authenticated successfully:', user.email)
         router.push('/app')
         
       } catch (err) {

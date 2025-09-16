@@ -12,44 +12,36 @@ export async function POST(request: NextRequest) {
     const profileData = await request.json()
     console.log('Received profile data:', profileData)
     
-    // First, verify the user is authenticated using the anon client
-    const supabaseAnon = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
-    // Get the user from the Authorization header
-    const authHeader = request.headers.get('authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      console.error('No authorization header found')
-      return NextResponse.json({ error: 'No authorization token' }, { status: 401 })
+    // Get the user ID from the request body (sent from ProfileForm)
+    const { userId } = profileData
+    if (!userId) {
+      console.error('No userId provided')
+      return NextResponse.json({ error: 'User ID required' }, { status: 400 })
     }
 
-    const token = authHeader.split(' ')[1]
-    console.log('Token received:', token ? 'present' : 'missing')
+    console.log('User ID from request:', userId)
 
-    // Verify the token and get user
-    const { data: { user }, error: userError } = await supabaseAnon.auth.getUser(token)
-    
-    if (userError || !user) {
-      console.error('User authentication error:', userError)
-      return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
-    }
-
-    console.log('User authenticated successfully:', user.email)
-
-    // Create response after we know user is authenticated
-    const response = NextResponse.json({ success: true })
-
-    console.log('Server-side user authentication:', { 
-      id: user.id, 
-      email: user.email, 
-      role: user.role 
+    // Use service role client for database operations (bypasses RLS)
+    console.log('Environment variables check:', {
+      hasUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      serviceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length || 0
     })
 
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+
     const profileToInsert = {
-      id: user.id,
-      email: user.email!,
+      id: userId,
+      email: profileData.email,
       first_name: profileData.first_name,
       last_name: profileData.last_name,
       company: profileData.company,
@@ -62,18 +54,6 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Server-side profile data:', profileToInsert)
-
-    // Use service role client for database operations (bypasses RLS)
-    const supabaseAdmin = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
-      }
-    )
 
     // Insert/update the profile using admin client
     console.log('Attempting to upsert profile with admin client:', profileToInsert)
@@ -94,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('Profile saved successfully:', data)
-    return response
+    return NextResponse.json({ success: true })
 
   } catch (error) {
     console.error('API error:', error)

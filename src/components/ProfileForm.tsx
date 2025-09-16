@@ -103,6 +103,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
       // Update or insert profile using server-side API route
       const profileData = {
+        userId: user.id,
+        email: user.email!,
         first_name: formData.first_name,
         last_name: formData.last_name,
         company: formData.company,
@@ -115,19 +117,12 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       }
       
       console.log('Profile data being sent to API:', profileData)
-      
-      // Get the session token for authorization
-      const { data: { session } } = await supabase.auth.getSession()
-      if (!session?.access_token) {
-        throw new Error('Nie ste prihlásený')
-      }
 
       // Call the server-side API route
       const response = await fetch('/api/profiles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(profileData)
       })

@@ -13,7 +13,14 @@ export default function LoginPage() {
   useEffect(() => {
     // Use production URL if available, otherwise fall back to current origin
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-    setRedirectUrl(`${baseUrl}/auth/callback`)
+    const redirect = `${baseUrl}/auth/callback`
+    console.log('Login page - constructing redirect URL:', {
+      baseUrl,
+      redirect,
+      envVar: process.env.NEXT_PUBLIC_APP_URL,
+      windowOrigin: window.location.origin
+    })
+    setRedirectUrl(redirect)
   }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -22,6 +29,7 @@ export default function LoginPage() {
     setMessage('')
 
     try {
+      console.log('Sending magic link with redirect URL:', redirectUrl)
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {

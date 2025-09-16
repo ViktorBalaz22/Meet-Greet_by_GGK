@@ -68,8 +68,19 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     setMessage('')
 
     try {
-      const user = (await supabase.auth.getUser()).data.user
+      const { data: { user }, error: userError } = await supabase.auth.getUser()
+      if (userError) {
+        console.error('Error getting user:', userError)
+        throw new Error('Chyba pri overovaní používateľa: ' + userError.message)
+      }
       if (!user) throw new Error('Nie ste prihlásený')
+      
+      console.log('User authentication status:', { 
+        id: user.id, 
+        email: user.email, 
+        role: user.role,
+        aud: user.aud 
+      })
 
       let photoPath = profile?.photo_path
 
@@ -91,21 +102,27 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       }
 
       // Update or insert profile
+      const profileData = {
+        id: user.id,
+        email: user.email!,
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        company: formData.company,
+        position: formData.position,
+        phone: formData.phone,
+        linkedin_url: formData.linkedin_url,
+        about: formData.about,
+        photo_path: photoPath,
+        agreed_gdpr: formData.agreed_gdpr,
+      }
+      
+      console.log('Profile data being sent:', profileData)
+      console.log('User ID:', user.id)
+      console.log('User email:', user.email)
+      
       const { error } = await supabase
         .from('profiles')
-        .upsert({
-          id: user.id,
-          email: user.email!,
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          company: formData.company,
-          position: formData.position,
-          phone: formData.phone,
-          linkedin_url: formData.linkedin_url,
-          about: formData.about,
-          photo_path: photoPath,
-          agreed_gdpr: formData.agreed_gdpr,
-        })
+        .upsert(profileData)
 
       if (error) throw error
 

@@ -84,21 +84,11 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
       let photoPath = profile?.photo_path
 
-      // Upload photo if provided
+      // Skip photo upload for now to avoid RLS issues
+      // TODO: Implement photo upload via API route with service role key
       if (photoFile) {
-        const fileExt = photoFile.name.split('.').pop()
-        const fileName = `${user.id}.${fileExt}`
-        const filePath = `photos/${fileName}`
-
-        const { error: uploadError } = await supabase.storage
-          .from('photos')
-          .upload(filePath, photoFile, {
-            cacheControl: '3600',
-            upsert: true
-          })
-
-        if (uploadError) throw uploadError
-        photoPath = filePath
+        console.log('Photo upload skipped - will implement via API route later')
+        // photoPath = 'placeholder' // Don't set photoPath for now
       }
 
       // Update or insert profile using direct client-side Supabase

@@ -1,16 +1,16 @@
 export interface Profile {
   id: string
-  user_id: string
-  full_name: string
   email: string
+  first_name: string | null
+  last_name: string | null
   company: string | null
   position: string | null
   phone: string | null
   linkedin_url: string | null
-  bio: string | null
-  photo_url: string | null
+  about: string | null
+  photo_path: string | null
   is_admin: boolean
-  gdpr_consent: boolean
+  agreed_gdpr: boolean
   is_hidden: boolean
   created_at: string
   updated_at: string

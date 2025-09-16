@@ -16,26 +16,26 @@ export default function ProfileDetail({ profile }: ProfileDetailProps) {
 
   // Get photo URL from Supabase Storage
   useEffect(() => {
-    if (profile.photo_url) {
+    if (profile.photo_path) {
       const { data } = supabase.storage
         .from('photos')
-        .getPublicUrl(profile.photo_url)
+        .getPublicUrl(profile.photo_path)
       setPhotoUrl(data.publicUrl)
     }
-  }, [profile.photo_url])
+  }, [profile.photo_path])
 
   const handleDownloadVCard = () => {
     // Generate vCard content
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:${profile.full_name}
-N:${profile.full_name};;;
+FN:${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()}
+N:${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()};;;
 ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
 URL:${profile.linkedin_url || ''}
-NOTE:${profile.bio || ''}
+NOTE:${profile.about || ''}
 END:VCARD`
 
     // Create and download file
@@ -43,7 +43,7 @@ END:VCARD`
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `${profile.full_name.replace(/\s+/g, '_')}_${profile.company}.vcf`
+    link.download = `${`${profile.first_name || ""} ${profile.last_name || ""}`.trim().replace(/\s+/g, '_')}_${profile.company}.vcf`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -52,8 +52,8 @@ END:VCARD`
 
   const handleShare = async () => {
     const shareData = {
-      title: `${profile.full_name} - ${profile.company}`,
-      text: `Pozrite si profil ${profile.full_name} z ${profile.company}`,
+      title: `${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} - ${profile.company}`,
+      text: `Pozrite si profil ${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} z ${profile.company}`,
       url: window.location.href,
     }
 
@@ -98,7 +98,7 @@ END:VCARD`
                 <img
                   className="h-32 w-32 rounded-full object-cover mx-auto md:mx-0"
                   src={photoUrl}
-                  alt={profile.full_name}
+                  alt={`${profile.first_name || ""} ${profile.last_name || ""}`.trim()}
                 />
               ) : (
                 <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto md:mx-0">
@@ -112,7 +112,7 @@ END:VCARD`
             {/* Details */}
             <div className="flex-1 text-center md:text-left">
               <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                {profile.full_name}
+                {`${profile.first_name || ""} ${profile.last_name || ""}`.trim()}
               </h2>
               <p className="text-xl text-gray-600 mb-4">
                 {profile.position} {profile.position && profile.company && '•'} {profile.company}
@@ -152,10 +152,10 @@ END:VCARD`
               </div>
 
               {/* About */}
-              {profile.bio && (
+              {profile.about && (
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">O mne</h3>
-                  <p className="text-gray-700 leading-relaxed">{profile.bio}</p>
+                  <p className="text-gray-700 leading-relaxed">{profile.about}</p>
                 </div>
               )}
 

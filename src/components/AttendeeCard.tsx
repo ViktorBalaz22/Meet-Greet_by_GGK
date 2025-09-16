@@ -14,10 +14,10 @@ export default function AttendeeCard({ profile }: AttendeeCardProps) {
 
   // Get photo URL from Supabase Storage
   const getPhotoUrl = async () => {
-    if (profile.photo_url) {
+    if (profile.photo_path) {
       const { data } = supabase.storage
         .from('photos')
-        .getPublicUrl(profile.photo_url)
+        .getPublicUrl(profile.photo_path)
       setPhotoUrl(data.publicUrl)
     }
   }
@@ -30,14 +30,14 @@ export default function AttendeeCard({ profile }: AttendeeCardProps) {
     // Generate vCard content
     const vcard = `BEGIN:VCARD
 VERSION:3.0
-FN:${profile.full_name}
-N:${profile.full_name};;;
+FN:${profile.first_name || ''} ${profile.last_name || ''}
+N:${profile.last_name || ''};${profile.first_name || ''};;;;
 ORG:${profile.company}
 TITLE:${profile.position || ''}
 TEL:${profile.phone || ''}
 EMAIL:${profile.email}
 URL:${profile.linkedin_url || ''}
-NOTE:${profile.bio || ''}
+NOTE:${profile.about || ''}
 END:VCARD`
 
     // Create and download file
@@ -45,7 +45,8 @@ END:VCARD`
     const url = window.URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `${profile.full_name.replace(/\s+/g, '_')}_${profile.company}.vcf`
+    const fullName = `${profile.first_name || ''} ${profile.last_name || ''}`.trim()
+    link.download = `${fullName.replace(/\s+/g, '_')}_${profile.company}.vcf`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -54,8 +55,8 @@ END:VCARD`
 
   const handleShare = async () => {
     const shareData = {
-      title: `${profile.full_name} - ${profile.company}`,
-      text: `Pozrite si profil ${profile.full_name} z ${profile.company}`,
+      title: `${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} - ${profile.company}`,
+      text: `Pozrite si profil ${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} z ${profile.company}`,
       url: `${window.location.origin}/profile/${profile.id}`,
     }
 
@@ -81,7 +82,7 @@ END:VCARD`
             <img
               className="h-16 w-16 rounded-full object-cover"
               src={photoUrl}
-              alt={profile.full_name}
+              alt={`${profile.first_name || ''} ${profile.last_name || ''}`.trim()}
             />
           ) : (
             <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center">
@@ -97,7 +98,7 @@ END:VCARD`
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-medium text-gray-900">
-                {profile.full_name}
+                {`${profile.first_name || ''} ${profile.last_name || ''}`.trim()}
               </h3>
               <p className="text-sm text-gray-600">
                 {profile.position} {profile.position && profile.company && '•'} {profile.company}
@@ -136,7 +137,7 @@ END:VCARD`
           </div>
 
           {/* Additional info */}
-          {(profile.phone || profile.linkedin_url || profile.bio) && (
+          {(profile.phone || profile.linkedin_url || profile.about) && (
             <div className="mt-2 space-y-1">
               {profile.phone && (
                 <p className="text-sm text-gray-600">
@@ -153,9 +154,9 @@ END:VCARD`
                   LinkedIn profil
                 </a>
               )}
-              {profile.bio && (
+              {profile.about && (
                 <p className="text-sm text-gray-600 mt-2">
-                  {profile.bio}
+                  {profile.about}
                 </p>
               )}
             </div>

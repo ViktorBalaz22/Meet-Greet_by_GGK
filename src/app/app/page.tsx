@@ -14,7 +14,7 @@ export default async function AppPage() {
   const profile = await getProfile(user.id)
 
   // If user doesn't have a complete profile, show the form
-  if (!profile || !profile.full_name || !profile.company || !profile.gdpr_consent) {
+  if (!profile || !`${profile.first_name || ""} ${profile.last_name || ""}`.trim() || !profile.company || !profile.agreed_gdpr) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navigation />

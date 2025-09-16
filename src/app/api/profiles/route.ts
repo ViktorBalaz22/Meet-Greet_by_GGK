@@ -1,9 +1,16 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 
+export async function GET() {
+  return NextResponse.json({ message: 'Profiles API is working' })
+}
+
 export async function POST(request: NextRequest) {
+  console.log('API route hit!')
+  
   try {
     const profileData = await request.json()
+    console.log('Received profile data:', profileData)
     
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -27,6 +34,8 @@ export async function POST(request: NextRequest) {
       console.error('User authentication error:', userError)
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
     }
+
+    console.log('User authenticated successfully:', user.email)
 
     // Create response after we know user is authenticated
     const response = NextResponse.json({ success: true })

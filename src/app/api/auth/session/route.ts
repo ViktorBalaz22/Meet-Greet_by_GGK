@@ -29,6 +29,10 @@ export async function POST(request: NextRequest) {
       refresh_token,
     })
 
+    // Set longer session duration for evening events
+    const expiresAt = new Date()
+    expiresAt.setHours(expiresAt.getHours() + 8) // 8 hours for evening event
+
     if (error) {
       console.error('Error setting session server-side:', error)
       return NextResponse.json({ error: error.message }, { status: 400 })

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Database Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Database Test</h1>
+    <button onclick="testDatabase()">Test Database Connection</button>
+    <button onclick="testProfileInsert()">Test Profile Insert</button>
+    <button onclick="testProfileSelect()">Test Profile Select</button>
+    <div id="result"></div>
+
+    <script>
+        const supabaseUrl = 'YOUR_SUPABASE_URL'
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function testDatabase() {
+            const resultDiv = document.getElementById('result')
+            resultDiv.innerHTML = '<p>Testing database connection...</p>'
+            
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('count')
+                    .limit(1)
+                
+                if (error) {
+                    resultDiv.innerHTML += `<p>Database Error: ${error.message}</p>`
+                } else {
+                    resultDiv.innerHTML += `<p>Database Connection: SUCCESS</p>`
+                }
+            } catch (err) {
+                resultDiv.innerHTML += `<p>Connection Error: ${err.message}</p>`
+            }
+        }
+
+        async function testProfileInsert() {
+            const resultDiv = document.getElementById('result')
+            resultDiv.innerHTML = '<p>Testing profile insert...</p>'
+            
+            try {
+                const testProfile = {
+                    id: 'test-user-' + Date.now(),
+                    email: 'test@example.com',
+                    first_name: 'Test',
+                    last_name: 'User',
+                    company: 'Test Company',
+                    agreed_gdpr: true
+                }
+
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .upsert(testProfile)
+                
+                if (error) {
+                    resultDiv.innerHTML += `<p>Insert Error: ${error.message}</p>`
+                } else {
+                    resultDiv.innerHTML += `<p>Profile Insert: SUCCESS</p>`
+                }
+            } catch (err) {
+                resultDiv.innerHTML += `<p>Insert Error: ${err.message}</p>`
+            }
+        }
+
+        async function testProfileSelect() {
+            const resultDiv = document.getElementById('result')
+            resultDiv.innerHTML = '<p>Testing profile select...</p>'
+            
+            try {
+                const { data, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .limit(5)
+                
+                if (error) {
+                    resultDiv.innerHTML += `<p>Select Error: ${error.message}</p>`
+                } else {
+                    resultDiv.innerHTML += `<p>Profile Select: SUCCESS</p>`
+                    resultDiv.innerHTML += `<p>Found ${data.length} profiles</p>`
+                    resultDiv.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`
+                }
+            } catch (err) {
+                resultDiv.innerHTML += `<p>Select Error: ${err.message}</p>`
+            }
+        }
+    </script>
+</body>
+</html>

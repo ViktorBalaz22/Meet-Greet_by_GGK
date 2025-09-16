@@ -46,7 +46,21 @@ export async function POST(request: NextRequest) {
     }
 
     console.log('API route: Profile saved successfully:', data)
-    return NextResponse.json({ success: true, data })
+    
+    // Verify the profile was actually saved
+    const { data: verifyData, error: verifyError } = await supabaseAdmin
+      .from('profiles')
+      .select('*')
+      .eq('id', profileData.id)
+      .single()
+    
+    if (verifyError) {
+      console.error('API route: Verification error:', verifyError)
+    } else {
+      console.log('API route: Profile verified in database:', verifyData)
+    }
+    
+    return NextResponse.json({ success: true, data, verified: verifyData })
 
   } catch (error) {
     console.error('API route: Error:', error)

@@ -40,36 +40,34 @@ export default function AuthCallbackPage() {
           return
         }
 
-        // Set the session using the tokens
-        console.log('Attempting to set session with tokens')
-        const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken
+        // Set the session using the server-side API route
+        console.log('Attempting to set session via API route')
+        const sessionResponse = await fetch('/api/auth/session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            access_token: accessToken,
+            refresh_token: refreshToken
+          })
         })
 
-        if (sessionError) {
-          console.error('Error setting session:', sessionError)
-          setError('Failed to authenticate: ' + sessionError.message)
+        if (!sessionResponse.ok) {
+          const errorData = await sessionResponse.json()
+          console.error('Error setting session via API:', errorData)
+          setError('Failed to authenticate: ' + errorData.error)
           return
         }
 
-        console.log('Session set successfully:', sessionData)
+        console.log('Session set successfully via API')
         
-        // Verify the session was actually set
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
-        if (userError || !user) {
-          console.error('Failed to get user after session set:', userError)
-          setError('Session established but user not found: ' + (userError?.message || 'Unknown error'))
-          return
-        }
-
-        console.log('User authenticated successfully:', user.email)
+        // Wait for the session to be fully persisted
+        await new Promise(resolve => setTimeout(resolve, 500))
         
-        // Wait a moment for the session to be fully persisted
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
-        // Force a page reload to ensure cookies are properly set
+        // Force a full page reload to ensure cookies are properly set
         // This is necessary because the middleware runs before the cookies are fully persisted
+        console.log('Redirecting to /app with full page reload')
         window.location.href = '/app'
         
       } catch (err) {

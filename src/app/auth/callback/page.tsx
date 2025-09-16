@@ -64,7 +64,13 @@ export default function AuthCallbackPage() {
         }
 
         console.log('User authenticated successfully:', user.email)
-        router.push('/app')
+        
+        // Wait a moment for the session to be fully persisted
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        // Force a page reload to ensure cookies are properly set
+        // This is necessary because the middleware runs before the cookies are fully persisted
+        window.location.href = '/app'
         
       } catch (err) {
         console.error('Auth callback error:', err)

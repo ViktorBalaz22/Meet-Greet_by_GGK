@@ -119,6 +119,11 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       console.log('Profile data being sent to Supabase:', profileData)
 
       // Try direct client-side upsert
+      console.log('Attempting upsert with data:', profileData)
+      console.log('User ID from auth:', user.id)
+      console.log('Profile ID in data:', profileData.id)
+      console.log('Are they equal?', user.id === profileData.id)
+      
       const { data, error } = await supabase
         .from('profiles')
         .upsert(profileData, { 
@@ -128,6 +133,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
       if (error) {
         console.error('Database error:', error)
+        console.error('Full error object:', JSON.stringify(error, null, 2))
         console.error('Error details:', {
           message: error.message,
           details: error.details,

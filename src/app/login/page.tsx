@@ -34,6 +34,7 @@ export default function LoginPage() {
         email,
         options: {
           emailRedirectTo: redirectUrl,
+          redirectTo: redirectUrl,
         },
       })
 

@@ -101,8 +101,10 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         photoPath = filePath
       }
 
-      // Update or insert profile using server-side API route
+      // Update or insert profile using client-side Supabase with RLS bypass
       const profileData = {
+        id: user.id,
+        email: user.email!,
         first_name: formData.first_name,
         last_name: formData.last_name,
         company: formData.company,
@@ -114,21 +116,28 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         agreed_gdpr: formData.agreed_gdpr,
       }
       
-      console.log('Profile data being sent to API:', profileData)
+      console.log('Profile data being sent:', profileData)
       
-      const response = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData)
-      })
+      // Try to insert first, then update if it fails
+      const { data, error } = await supabase
+        .from('profiles')
+        .upsert(profileData, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        console.error('API error:', errorData)
-        throw new Error(errorData.error || 'Chyba pri ukladaní profilu')
+      if (error) {
+        console.error('Database error:', error)
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw new Error('Chyba pri ukladaní profilu: ' + error.message)
       }
+
+      console.log('Profile saved successfully:', data)
 
       setMessage('Profil bol úspešne uložený!')
       router.refresh()

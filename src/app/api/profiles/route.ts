@@ -1,4 +1,4 @@
-import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
@@ -12,23 +12,24 @@ export async function POST(request: NextRequest) {
     const profileData = await request.json()
     console.log('Received profile data:', profileData)
     
-    const supabase = createServerClient(
+    // First, verify the user is authenticated using the anon client
+    const supabaseAnon = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll() {
-            return request.cookies.getAll()
-          },
-          setAll(cookiesToSet) {
-            // We'll set cookies after we create the response
-          },
-        },
-      }
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     )
 
-    // Get the authenticated user
-    const { data: { user }, error: userError } = await supabase.auth.getUser()
+    // Get the user from the Authorization header
+    const authHeader = request.headers.get('authorization')
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      console.error('No authorization header found')
+      return NextResponse.json({ error: 'No authorization token' }, { status: 401 })
+    }
+
+    const token = authHeader.split(' ')[1]
+    console.log('Token received:', token ? 'present' : 'missing')
+
+    // Verify the token and get user
+    const { data: { user }, error: userError } = await supabaseAnon.auth.getUser(token)
     
     if (userError || !user) {
       console.error('User authentication error:', userError)
@@ -62,10 +63,22 @@ export async function POST(request: NextRequest) {
 
     console.log('Server-side profile data:', profileToInsert)
 
-    // Insert/update the profile using server-side client
-    console.log('Attempting to upsert profile with data:', profileToInsert)
+    // Use service role client for database operations (bypasses RLS)
+    const supabaseAdmin = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      }
+    )
+
+    // Insert/update the profile using admin client
+    console.log('Attempting to upsert profile with admin client:', profileToInsert)
     
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profiles')
       .upsert(profileToInsert)
 

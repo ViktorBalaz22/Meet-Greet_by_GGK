@@ -116,11 +116,18 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       
       console.log('Profile data being sent to API:', profileData)
       
+      // Get the session token for authorization
+      const { data: { session } } = await supabase.auth.getSession()
+      if (!session?.access_token) {
+        throw new Error('Nie ste prihlásený')
+      }
+
       // Call the server-side API route
       const response = await fetch('/api/profiles', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
         },
         body: JSON.stringify(profileData)
       })

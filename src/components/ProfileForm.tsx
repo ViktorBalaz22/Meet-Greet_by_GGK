@@ -118,32 +118,27 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       
       console.log('Profile data being sent to Supabase:', profileData)
 
-      // Try direct client-side upsert
-      console.log('Attempting upsert with data:', profileData)
+      // Use server-side API route with service role key to bypass RLS
+      console.log('Attempting upsert via API route with service role key')
       console.log('User ID from auth:', user.id)
       console.log('Profile ID in data:', profileData.id)
-      console.log('Are they equal?', user.id === profileData.id)
       
-      const { data, error } = await supabase
-        .from('profiles')
-        .upsert(profileData, { 
-          onConflict: 'id',
-          ignoreDuplicates: false 
-        })
+      const response = await fetch('/api/profiles', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData)
+      })
 
-      if (error) {
-        console.error('Database error:', error)
-        console.error('Full error object:', JSON.stringify(error, null, 2))
-        console.error('Error details:', {
-          message: error.message,
-          details: error.details,
-          hint: error.hint,
-          code: error.code
-        })
-        throw new Error('Chyba pri ukladaní profilu: ' + error.message)
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('API error:', errorData)
+        throw new Error('Chyba pri ukladaní profilu: ' + errorData.error)
       }
 
-      console.log('Profile saved successfully:', data)
+      const result = await response.json()
+      console.log('Profile saved successfully via API:', result)
 
       setMessage('Profil bol úspešne uložený!')
       router.refresh()

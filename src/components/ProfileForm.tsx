@@ -101,9 +101,9 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         photoPath = filePath
       }
 
-      // Update or insert profile using server-side API route
+      // Update or insert profile using direct client-side Supabase
       const profileData = {
-        userId: user.id,
+        id: user.id,
         email: user.email!,
         first_name: formData.first_name,
         last_name: formData.last_name,
@@ -116,25 +116,28 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         agreed_gdpr: formData.agreed_gdpr,
       }
       
-      console.log('Profile data being sent to API:', profileData)
+      console.log('Profile data being sent to Supabase:', profileData)
 
-      // Call the server-side API route
-      const response = await fetch('/api/profiles', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(profileData)
-      })
+      // Try direct client-side upsert
+      const { data, error } = await supabase
+        .from('profiles')
+        .upsert(profileData, { 
+          onConflict: 'id',
+          ignoreDuplicates: false 
+        })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        console.error('API error:', errorData)
-        throw new Error('Chyba pri ukladaní profilu: ' + errorData.error)
+      if (error) {
+        console.error('Database error:', error)
+        console.error('Error details:', {
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        throw new Error('Chyba pri ukladaní profilu: ' + error.message)
       }
 
-      const result = await response.json()
-      console.log('Profile saved successfully via API:', result)
+      console.log('Profile saved successfully:', data)
 
       setMessage('Profil bol úspešne uložený!')
       router.refresh()

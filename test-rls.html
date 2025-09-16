@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>RLS Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>RLS Policy Test</h1>
+    <button onclick="testRLS()">Test RLS Policy</button>
+    <div id="result"></div>
+
+    <script>
+        const supabaseUrl = 'YOUR_SUPABASE_URL'
+        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function testRLS() {
+            const resultDiv = document.getElementById('result')
+            
+            try {
+                // Test 1: Check if user is authenticated
+                const { data: { user }, error: userError } = await supabase.auth.getUser()
+                resultDiv.innerHTML += `<p>User: ${user ? user.email : 'Not authenticated'}</p>`
+                
+                if (userError) {
+                    resultDiv.innerHTML += `<p>User Error: ${userError.message}</p>`
+                    return
+                }
+
+                // Test 2: Try to select from profiles table
+                const { data: profiles, error: selectError } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .limit(1)
+                
+                resultDiv.innerHTML += `<p>Select Test: ${selectError ? 'FAILED - ' + selectError.message : 'SUCCESS'}</p>`
+
+                // Test 3: Try to insert a test profile
+                const testProfile = {
+                    id: user.id,
+                    email: user.email,
+                    first_name: 'Test',
+                    last_name: 'User',
+                    company: 'Test Company',
+                    agreed_gdpr: true
+                }
+
+                const { data: insertData, error: insertError } = await supabase
+                    .from('profiles')
+                    .upsert(testProfile, { onConflict: 'id' })
+                
+                resultDiv.innerHTML += `<p>Insert Test: ${insertError ? 'FAILED - ' + insertError.message : 'SUCCESS'}</p>`
+                
+                if (insertError) {
+                    resultDiv.innerHTML += `<p>Error Details: ${JSON.stringify(insertError, null, 2)}</p>`
+                }
+
+            } catch (error) {
+                resultDiv.innerHTML += `<p>General Error: ${error.message}</p>`
+            }
+        }
+    </script>
+</body>
+</html>

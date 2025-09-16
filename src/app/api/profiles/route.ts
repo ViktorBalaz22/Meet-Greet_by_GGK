@@ -46,11 +46,18 @@ export async function POST(request: NextRequest) {
       role: user.role 
     })
 
-    // Ensure the profile data has the correct user ID
     const profileToInsert = {
-      ...profileData,
       id: user.id,
-      email: user.email
+      email: user.email!,
+      first_name: profileData.first_name,
+      last_name: profileData.last_name,
+      company: profileData.company,
+      position: profileData.position,
+      phone: profileData.phone,
+      linkedin_url: profileData.linkedin_url,
+      about: profileData.about,
+      photo_path: profileData.photo_path,
+      agreed_gdpr: profileData.agreed_gdpr,
     }
 
     console.log('Server-side profile data:', profileToInsert)

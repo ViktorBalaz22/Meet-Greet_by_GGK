@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
@@ -13,6 +13,18 @@ export default function AuthCallbackPage() {
     const handleAuthCallback = async () => {
       try {
         console.log('Auth callback page loaded')
+        
+        // Create Supabase client dynamically to avoid SSR issues
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+        
+        if (!supabaseUrl || !supabaseKey) {
+          console.error('Missing Supabase environment variables')
+          setError('Configuration error: Missing Supabase credentials')
+          return
+        }
+        
+        const supabase = createClient(supabaseUrl, supabaseKey)
         
         // Get the hash fragment from the URL
         const hash = window.location.hash.substring(1)

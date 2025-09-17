@@ -2,45 +2,26 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
-import { Profile, User } from '@/lib/types'
+import { Profile } from '@/lib/types'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import ProfileForm from '@/components/ProfileForm'
 import DirectoryList from '@/components/DirectoryList'
 import Navigation from '@/components/Navigation'
 
 export default function AppPage() {
   const router = useRouter()
-  const [user, setUser] = useState<User | null>(null)
+  const { supabase, user, loading: authLoading } = useSupabase()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const fetchProfile = async () => {
+      if (!supabase || !user) {
+        setLoading(false)
+        return
+      }
+
       try {
-        const supabase = createClient(
-          process.env.NEXT_PUBLIC_SUPABASE_URL!,
-          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-        )
-
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
-        
-        if (userError) {
-          console.error('Error getting user:', userError)
-          router.push('/login')
-          return
-        }
-
-        if (!user) {
-          router.push('/login')
-          return
-        }
-
-        setUser({
-          id: user.id,
-          email: user.email!,
-          created_at: user.created_at
-        })
-
         // Get profile
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
@@ -53,19 +34,17 @@ export default function AppPage() {
         } else {
           setProfile(profileData)
         }
-
       } catch (error) {
-        console.error('Error in checkAuth:', error)
-        router.push('/login')
+        console.error('Error in fetchProfile:', error)
       } finally {
         setLoading(false)
       }
     }
 
-    checkAuth()
-  }, [router])
+    fetchProfile()
+  }, [supabase, user])
 
-  if (loading) {
+  if (authLoading || loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -77,7 +56,8 @@ export default function AppPage() {
   }
 
   if (!user) {
-    return null // Will redirect to login
+    router.push('/login')
+    return null
   }
 
   // If user doesn't have a complete profile, show the form
@@ -119,7 +99,7 @@ export default function AppPage() {
             </div>
             <div className="mt-4 sm:mt-0">
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => router.push('/profile/edit')}
                 className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 ✏️ Upraviť môj profil

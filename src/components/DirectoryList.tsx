@@ -2,25 +2,25 @@
 
 import { useState, useEffect } from 'react'
 import { Profile } from '@/lib/types'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import AttendeeCard from './AttendeeCard'
-import { createClient } from '@supabase/supabase-js'
 
 export default function DirectoryList() {
+  const { supabase } = useSupabase()
   const [profiles, setProfiles] = useState<Profile[]>([])
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
-    fetchProfiles()
-  }, [])
+    if (supabase) {
+      fetchProfiles()
+    }
+  }, [supabase])
 
   const fetchProfiles = async () => {
+    if (!supabase) return
+
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
-      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -39,17 +39,14 @@ export default function DirectoryList() {
   const handleSearch = async (query: string) => {
     setSearchQuery(query)
     
+    if (!supabase) return
+    
     if (!query.trim()) {
       fetchProfiles()
       return
     }
 
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
-      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')

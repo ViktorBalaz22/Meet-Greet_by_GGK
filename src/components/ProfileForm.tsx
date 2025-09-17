@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { Profile } from '@/lib/types'
 import { useRouter } from 'next/navigation'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
-import { createClient } from '@supabase/supabase-js'
 
 interface ProfileFormProps {
   profile?: Profile | null
@@ -12,6 +12,7 @@ interface ProfileFormProps {
 
 export default function ProfileForm({ profile }: ProfileFormProps) {
   const router = useRouter()
+  const { supabase, user } = useSupabase()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   
@@ -93,28 +94,13 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     setMessage('')
 
     try {
-      // Create Supabase client dynamically to avoid SSR issues
-      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-      
-      if (!supabaseUrl || !supabaseKey) {
-        throw new Error('Chyba konfigurácie: Chýbajú Supabase údaje')
+      if (!supabase || !user) {
+        throw new Error('Nie ste prihlásený')
       }
-      
-      const supabase = createClient(supabaseUrl, supabaseKey)
-      
-      const { data: { user }, error: userError } = await supabase.auth.getUser()
-      if (userError) {
-        console.error('Error getting user:', userError)
-        throw new Error('Chyba pri overovaní používateľa: ' + userError.message)
-      }
-      if (!user) throw new Error('Nie ste prihlásený')
       
       console.log('User authentication status:', { 
         id: user.id, 
-        email: user.email, 
-        role: user.role,
-        aud: user.aud 
+        email: user.email
       })
 
       let photoPath = profile?.photo_path
@@ -181,12 +167,12 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       const result = await response.json()
       console.log('Profile saved successfully via API:', result)
 
-      setMessage('Profil bol úspešne uložený! Teraz môžete prehliadať ostatných účastníkov.')
-      
-      // Auto-redirect to main app after 2 seconds
-      setTimeout(() => {
-        router.push('/app')
-      }, 2000)
+             setMessage('Profil bol úspešne uložený! Presmerovávam na zoznam účastníkov...')
+             
+             // Auto-redirect to main app after 2 seconds
+             setTimeout(() => {
+               window.location.href = '/app'
+             }, 2000)
     } catch (error: unknown) {
       setMessage('Chyba pri ukladaní profilu: ' + (error instanceof Error ? error.message : 'Neznáma chyba'))
     } finally {
@@ -359,27 +345,6 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         {loading ? 'Ukladám...' : 'Uložiť profil'}
       </button>
     </form>
-
-    {/* Navigation Section */}
-    <div className="mt-8 pt-6 border-t border-gray-200">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          onClick={() => router.push('/app')}
-          className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          👥 Prehliadať účastníkov
-        </button>
-        <button
-          onClick={() => window.location.reload()}
-          className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          ✏️ Upraviť profil
-        </button>
-      </div>
-      <p className="text-xs text-gray-500 mt-2 text-center">
-        Po uložení profilu môžete prehliadať ostatných účastníkov
-      </p>
-    </div>
     </>
   )
 }

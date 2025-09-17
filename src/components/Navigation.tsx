@@ -2,33 +2,32 @@
 
 import { useState, useEffect } from 'react'
 import { Profile } from '@/lib/types'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import Link from 'next/link'
-import { createClient } from '@supabase/supabase-js'
 
 export default function Navigation() {
+  const { supabase, user } = useSupabase()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchProfile()
-  }, [])
+    if (supabase && user) {
+      fetchProfile()
+    } else {
+      setLoading(false)
+    }
+  }, [supabase, user])
 
   const fetchProfile = async () => {
+    if (!supabase || !user) return
+
     try {
-      const supabase = createClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      )
-      
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('email', user.email)
-          .single()
-        setProfile(data)
-      }
+      const { data } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', user.email)
+        .single()
+      setProfile(data)
     } catch (error) {
       console.error('Error fetching profile:', error)
     } finally {
@@ -37,10 +36,7 @@ export default function Navigation() {
   }
 
   const handleLogout = async () => {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
+    if (!supabase) return
     await supabase.auth.signOut()
     window.location.href = '/'
   }

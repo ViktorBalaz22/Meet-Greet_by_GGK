@@ -91,9 +91,9 @@ export default function AuthCallbackPage() {
         // Wait a moment for the session to be established
         await new Promise(resolve => setTimeout(resolve, 1000))
         
-        // Redirect to main app
-        console.log('Redirecting to /app')
-        router.push('/app')
+               // Redirect to main app (attendees list)
+               console.log('Redirecting to /app')
+               window.location.href = '/app'
         
       } catch (err) {
         console.error('Auth callback error:', err)

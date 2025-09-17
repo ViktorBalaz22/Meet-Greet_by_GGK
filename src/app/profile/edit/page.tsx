@@ -10,7 +10,7 @@ export default async function EditProfilePage() {
     redirect('/login')
   }
 
-  const profile = await getProfile(user.id)
+  const profile = await getProfile()
 
   return (
     <div className="min-h-screen bg-gray-50">

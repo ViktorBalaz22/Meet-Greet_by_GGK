@@ -38,7 +38,7 @@ export async function getUser(): Promise<User | null> {
   }
 }
 
-export async function getProfile(userId: string): Promise<Profile | null> {
+export async function getProfile(): Promise<Profile | null> {
   const supabase = await createServerClient()
   
   // First get the user to get their email
@@ -66,7 +66,7 @@ export async function requireAuth(): Promise<User> {
 
 export async function requireAdmin(): Promise<Profile> {
   const user = await requireAuth()
-  const profile = await getProfile(user.id)
+  const profile = await getProfile()
   
   if (!profile || !profile.is_admin) {
     throw new Error('Admin access required')

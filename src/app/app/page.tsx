@@ -11,7 +11,7 @@ export default async function AppPage() {
     redirect('/login')
   }
 
-  const profile = await getProfile(user.id)
+  const profile = await getProfile()
 
   // If user doesn't have a complete profile, show the form
   if (!profile || !profile.first_name || !profile.last_name || !profile.company || !profile.agreed_gdpr) {

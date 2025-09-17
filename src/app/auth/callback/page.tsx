@@ -43,8 +43,8 @@ export default function AuthCallbackPage() {
         // Set the session directly using Supabase client
         console.log('Setting session directly with Supabase client')
         const { data, error: sessionError } = await supabase.auth.setSession({
-          access_token,
-          refresh_token,
+          access_token: accessToken,
+          refresh_token: refreshToken,
         })
 
         if (sessionError) {

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import Link from 'next/link'
@@ -10,15 +10,7 @@ export default function Navigation() {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (supabase && user) {
-      fetchProfile()
-    } else {
-      setLoading(false)
-    }
-  }, [supabase, user])
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     if (!supabase || !user) return
 
     try {
@@ -33,7 +25,15 @@ export default function Navigation() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase, user])
+
+  useEffect(() => {
+    if (supabase && user) {
+      fetchProfile()
+    } else {
+      setLoading(false)
+    }
+  }, [supabase, user, fetchProfile])
 
   const handleLogout = async () => {
     if (!supabase) return

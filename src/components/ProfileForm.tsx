@@ -11,7 +11,6 @@ interface ProfileFormProps {
 }
 
 export default function ProfileForm({ profile }: ProfileFormProps) {
-  const router = useRouter()
   const { supabase, user } = useSupabase()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')

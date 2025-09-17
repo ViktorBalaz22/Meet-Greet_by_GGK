@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import AttendeeCard from './AttendeeCard'
@@ -11,27 +11,21 @@ export default function DirectoryList() {
   const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
 
-  useEffect(() => {
-    if (supabase) {
-      fetchProfiles()
-    }
-  }, [supabase])
-
-  const fetchProfiles = async () => {
+  const fetchProfiles = useCallback(async () => {
     if (!supabase) return
 
     try {
       console.log('DirectoryList: Fetching profiles...')
       
       // First try with is_hidden filter
-      let { data, error } = await supabase
+      let { data, error: queryError } = await supabase
         .from('profiles')
         .select('*')
         .eq('is_hidden', false)
         .order('created_at', { ascending: false })
 
-      if (error) {
-        console.error('DirectoryList: Error with is_hidden filter:', error)
+      if (queryError) {
+        console.error('DirectoryList: Error with is_hidden filter:', queryError)
         // Fallback: try without filter to see if RLS is the issue
         console.log('DirectoryList: Trying without is_hidden filter...')
         const fallbackResult = await supabase
@@ -55,7 +49,13 @@ export default function DirectoryList() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [supabase])
+
+  useEffect(() => {
+    if (supabase) {
+      fetchProfiles()
+    }
+  }, [supabase, fetchProfiles])
 
   const handleSearch = async (query: string) => {
     setSearchQuery(query)

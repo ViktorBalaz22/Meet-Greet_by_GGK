@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
@@ -39,35 +40,27 @@ export default function AuthCallbackPage() {
           return
         }
 
-        // Set the session using the server-side API route
-        console.log('Attempting to set session via API route')
-        const sessionResponse = await fetch('/api/auth/session', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            access_token: accessToken,
-            refresh_token: refreshToken
-          })
+        // Set the session directly using Supabase client
+        console.log('Setting session directly with Supabase client')
+        const { data, error: sessionError } = await supabase.auth.setSession({
+          access_token,
+          refresh_token,
         })
 
-        if (!sessionResponse.ok) {
-          const errorData = await sessionResponse.json()
-          console.error('Error setting session via API:', errorData)
-          setError('Failed to authenticate: ' + errorData.error)
+        if (sessionError) {
+          console.error('Error setting session:', sessionError)
+          setError('Failed to authenticate: ' + sessionError.message)
           return
         }
 
-        console.log('Session set successfully via API')
+        console.log('Session set successfully:', data)
         
-        // Wait for the session to be fully persisted
-        await new Promise(resolve => setTimeout(resolve, 500))
+        // Wait a moment for the session to be established
+        await new Promise(resolve => setTimeout(resolve, 1000))
         
-        // Force a full page reload to ensure cookies are properly set
-        // This is necessary because the middleware runs before the cookies are fully persisted
-        console.log('Redirecting to /app with full page reload')
-        window.location.href = '/app'
+        // Redirect to main app
+        console.log('Redirecting to /app')
+        router.push('/app')
         
       } catch (err) {
         console.error('Auth callback error:', err)

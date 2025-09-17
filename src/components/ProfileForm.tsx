@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
@@ -27,6 +27,27 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
 
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+
+  // Update form data when profile prop changes (fixes refresh issue)
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        first_name: profile.first_name || '',
+        last_name: profile.last_name || '',
+        company: profile.company || '',
+        position: profile.position || '',
+        phone: profile.phone || '',
+        linkedin_url: profile.linkedin_url || '',
+        about: profile.about || '',
+        agreed_gdpr: profile.agreed_gdpr || false,
+      })
+      
+      // Set photo preview if profile has a photo
+      if (profile.photo_path) {
+        setPhotoPreview(profile.photo_path)
+      }
+    }
+  }, [profile])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target

@@ -16,10 +16,17 @@ export default function AttendeeCard({ profile }: AttendeeCardProps) {
   // Get photo URL from Supabase Storage
   useEffect(() => {
     if (supabase && profile.photo_path) {
+      console.log('AttendeeCard: Getting photo URL for path:', profile.photo_path)
       const { data } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
+      console.log('AttendeeCard: Generated photo URL:', data.publicUrl)
       setPhotoUrl(data.publicUrl)
+    } else {
+      console.log('AttendeeCard: No photo path or supabase client:', { 
+        hasSupabase: !!supabase, 
+        photoPath: profile.photo_path 
+      })
     }
   }, [supabase, profile.photo_path])
 

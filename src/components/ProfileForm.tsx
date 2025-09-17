@@ -130,8 +130,12 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       const result = await response.json()
       console.log('Profile saved successfully via API:', result)
 
-      setMessage('Profil bol úspešne uložený!')
-      router.refresh()
+      setMessage('Profil bol úspešne uložený! Teraz môžete prehliadať ostatných účastníkov.')
+      
+      // Auto-redirect to main app after 2 seconds
+      setTimeout(() => {
+        router.push('/app')
+      }, 2000)
     } catch (error: unknown) {
       setMessage('Chyba pri ukladaní profilu: ' + (error instanceof Error ? error.message : 'Neznáma chyba'))
     } finally {
@@ -303,5 +307,26 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         {loading ? 'Ukladám...' : 'Uložiť profil'}
       </button>
     </form>
+
+    {/* Navigation Section */}
+    <div className="mt-8 pt-6 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-3">
+        <button
+          onClick={() => router.push('/app')}
+          className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          👥 Prehliadať účastníkov
+        </button>
+        <button
+          onClick={() => window.location.reload()}
+          className="flex-1 flex justify-center py-2 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+        >
+          ✏️ Upraviť profil
+        </button>
+      </div>
+      <p className="text-xs text-gray-500 mt-2 text-center">
+        Po uložení profilu môžete prehliadať ostatných účastníkov
+      </p>
+    </div>
   )
 }

@@ -41,12 +41,24 @@ export default async function AppPage() {
       <Navigation />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Zoznam účastníkov
-          </h1>
-          <p className="text-gray-600">
-            Prepojte sa s ostatnými účastníkmi eventu
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Zoznam účastníkov
+              </h1>
+              <p className="text-gray-600">
+                Prepojte sa s ostatnými účastníkmi eventu
+              </p>
+            </div>
+            <div className="mt-4 sm:mt-0">
+              <button
+                onClick={() => window.location.reload()}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                ✏️ Upraviť môj profil
+              </button>
+            </div>
+          </div>
         </div>
         <DirectoryList />
       </div>

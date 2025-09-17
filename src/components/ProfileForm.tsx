@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { Profile } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import imageCompression from 'browser-image-compression'
+import { createClient } from '@supabase/supabase-js'
 
 interface ProfileFormProps {
   profile?: Profile | null
@@ -93,6 +93,16 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     setMessage('')
 
     try {
+      // Create Supabase client dynamically to avoid SSR issues
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+      const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+      
+      if (!supabaseUrl || !supabaseKey) {
+        throw new Error('Chyba konfigurácie: Chýbajú Supabase údaje')
+      }
+      
+      const supabase = createClient(supabaseUrl, supabaseKey)
+      
       const { data: { user }, error: userError } = await supabase.auth.getUser()
       if (userError) {
         console.error('Error getting user:', userError)

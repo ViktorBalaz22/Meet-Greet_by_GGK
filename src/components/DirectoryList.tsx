@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { Profile } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
 import AttendeeCard from './AttendeeCard'
+import { createClient } from '@supabase/supabase-js'
 
 export default function DirectoryList() {
   const [profiles, setProfiles] = useState<Profile[]>([])
@@ -16,6 +16,11 @@ export default function DirectoryList() {
 
   const fetchProfiles = async () => {
     try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -40,11 +45,16 @@ export default function DirectoryList() {
     }
 
     try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('is_hidden', false)
-        .or(`full_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,bio.ilike.%${query}%`)
+        .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,about.ilike.%${query}%`)
         .order('created_at', { ascending: false })
 
       if (error) throw error

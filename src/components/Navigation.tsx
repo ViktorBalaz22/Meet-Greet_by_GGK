@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { supabase } from '@/lib/supabase'
 import { Profile } from '@/lib/types'
 import Link from 'next/link'
+import { createClient } from '@supabase/supabase-js'
 
 export default function Navigation() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -15,12 +15,17 @@ export default function Navigation() {
 
   const fetchProfile = async () => {
     try {
+      const supabase = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      )
+      
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const { data } = await supabase
           .from('profiles')
           .select('*')
-          .eq('id', user.id)
+          .eq('email', user.email)
           .single()
         setProfile(data)
       }
@@ -32,6 +37,10 @@ export default function Navigation() {
   }
 
   const handleLogout = async () => {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
     await supabase.auth.signOut()
     window.location.href = '/'
   }

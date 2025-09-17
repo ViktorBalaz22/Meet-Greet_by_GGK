@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Profile } from '@/lib/types'
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
+import imageCompression from 'browser-image-compression'
 
 interface ProfileFormProps {
   profile?: Profile | null
@@ -36,29 +37,53 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
     }))
   }
 
-  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        setMessage('Prosím vyberte obrázok')
+        setMessage('Prosím vyberte obrázok (JPG, PNG, GIF, WebP)')
         return
       }
       
-      // Validate file size (2MB max)
-      if (file.size > 2 * 1024 * 1024) {
-        setMessage('Obrázok je príliš veľký. Maximálna veľkosť je 2MB')
+      // Validate file size (5MB max)
+      if (file.size > 5 * 1024 * 1024) {
+        setMessage('Obrázok je príliš veľký. Maximálna veľkosť je 5MB')
         return
       }
 
-      setPhotoFile(file)
-      
-      // Create preview
-      const reader = new FileReader()
-      reader.onload = (e) => {
-        setPhotoPreview(e.target?.result as string)
+      try {
+        setMessage('Komprimujem obrázok...')
+        
+        // Compress image
+        const compressedFile = await imageCompression(file, {
+          maxSizeMB: 1, // Compress to max 1MB
+          maxWidthOrHeight: 1920, // Max resolution
+          useWebWorker: true,
+          fileType: 'image/jpeg', // Convert to JPEG for better compression
+          initialQuality: 0.8
+        })
+
+        console.log('Image compressed:', {
+          originalSize: (file.size / 1024 / 1024).toFixed(2) + 'MB',
+          compressedSize: (compressedFile.size / 1024 / 1024).toFixed(2) + 'MB',
+          compressionRatio: ((1 - compressedFile.size / file.size) * 100).toFixed(1) + '%'
+        })
+
+        setPhotoFile(compressedFile)
+        
+        // Create preview
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          setPhotoPreview(e.target?.result as string)
+          setMessage('Obrázok pripravený na nahratie')
+        }
+        reader.readAsDataURL(compressedFile)
+        
+      } catch (error) {
+        console.error('Image compression error:', error)
+        setMessage('Chyba pri kompresii obrázka. Skúste iný súbor.')
       }
-      reader.readAsDataURL(file)
     }
   }
 
@@ -82,13 +107,29 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         aud: user.aud 
       })
 
-      const photoPath = profile?.photo_path
+      let photoPath = profile?.photo_path
 
-      // Skip photo upload for now to avoid RLS issues
-      // TODO: Implement photo upload via API route with service role key
+      // Handle photo upload if a new file is selected
       if (photoFile) {
-        console.log('Photo upload skipped - will implement via API route later')
-        // photoPath = 'placeholder' // Don't set photoPath for now
+        console.log('Uploading photo...')
+        const uploadFormData = new FormData()
+        uploadFormData.append('file', photoFile)
+        uploadFormData.append('userId', user.id)
+
+        const uploadResponse = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData
+        })
+
+        if (!uploadResponse.ok) {
+          const uploadError = await uploadResponse.json()
+          console.error('Photo upload error:', uploadError)
+          throw new Error('Chyba pri nahrávaní fotky: ' + uploadError.error)
+        }
+
+        const uploadResult = await uploadResponse.json()
+        photoPath = uploadResult.filePath
+        console.log('Photo uploaded successfully:', uploadResult)
       }
 
       // Update or insert profile using email as unique identifier

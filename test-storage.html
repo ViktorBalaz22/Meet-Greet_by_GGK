@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supabase Storage Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Supabase Storage Test</h1>
+    <button onclick="testStorage()">Test Storage Connection</button>
+    <button onclick="testUpload()">Test Upload</button>
+    <div id="result"></div>
+
+    <script>
+        // Replace these with your actual Supabase values
+        const supabaseUrl = 'https://houxspywdwtxmsfqekvp.supabase.co'
+        const supabaseKey = 'REPLACE_WITH_YOUR_ACTUAL_ANON_KEY'
+        
+        // Initialize Supabase client
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
+        async function testStorage() {
+            const resultDiv = document.getElementById('result')
+            resultDiv.innerHTML = '<p>Testing storage connection...</p>'
+            
+            try {
+                // List buckets
+                const { data: buckets, error: bucketsError } = await supabase.storage.listBuckets()
+                if (bucketsError) throw bucketsError
+                
+                resultDiv.innerHTML += '<p style="color: green;">Storage connection successful!</p>'
+                resultDiv.innerHTML += `<p>Available buckets: ${buckets.map(b => b.name).join(', ')}</p>`
+                
+                // Check if photos bucket exists
+                const photosBucket = buckets.find(b => b.name === 'photos')
+                if (photosBucket) {
+                    resultDiv.innerHTML += '<p style="color: green;">Photos bucket exists!</p>'
+                } else {
+                    resultDiv.innerHTML += '<p style="color: orange;">Photos bucket does not exist. You need to create it in Supabase dashboard.</p>'
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p style="color: red;">Storage Error: ${error.message}</p>`
+            }
+        }
+
+        async function testUpload() {
+            const resultDiv = document.getElementById('result')
+            resultDiv.innerHTML += '<p>Testing file upload...</p>'
+            
+            // Create a test file
+            const testContent = 'This is a test file'
+            const testFile = new File([testContent], 'test.txt', { type: 'text/plain' })
+            
+            try {
+                const { data, error } = await supabase.storage
+                    .from('photos')
+                    .upload('test/test.txt', testFile)
+                
+                if (error) throw error
+                
+                resultDiv.innerHTML += '<p style="color: green;">Upload successful!</p>'
+                resultDiv.innerHTML += `<p>File path: ${data.path}</p>`
+                
+                // Get public URL
+                const { data: urlData } = supabase.storage
+                    .from('photos')
+                    .getPublicUrl(data.path)
+                
+                resultDiv.innerHTML += `<p>Public URL: <a href="${urlData.publicUrl}" target="_blank">${urlData.publicUrl}</a></p>`
+                
+            } catch (error) {
+                resultDiv.innerHTML += `<p style="color: red;">Upload Error: ${error.message}</p>`
+            }
+        }
+    </script>
+</body>
+</html>

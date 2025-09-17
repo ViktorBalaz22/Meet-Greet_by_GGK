@@ -91,10 +91,10 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         // photoPath = 'placeholder' // Don't set photoPath for now
       }
 
-      // Update or insert profile using direct client-side Supabase
+      // Update or insert profile using email as unique identifier
       const profileData = {
-        id: user.id,
-        email: user.email!,
+        id: user.id, // Keep user.id for foreign key relationship
+        email: user.email!, // Use email as the unique identifier for upsert
         first_name: formData.first_name,
         last_name: formData.last_name,
         company: formData.company,

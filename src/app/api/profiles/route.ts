@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('profiles')
       .upsert(profileData, { 
-        onConflict: 'id',
+        onConflict: 'email', // Use email as the unique identifier
         ignoreDuplicates: false 
       })
 

@@ -40,10 +40,16 @@ export async function getUser(): Promise<User | null> {
 
 export async function getProfile(userId: string): Promise<Profile | null> {
   const supabase = await createServerClient()
+  
+  // First get the user to get their email
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return null
+  
+  // Then get profile by email
   const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', userId)
+    .eq('email', user.email)
     .single()
 
   if (error || !profile) return null

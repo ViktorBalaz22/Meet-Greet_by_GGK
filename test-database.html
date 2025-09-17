@@ -12,8 +12,11 @@
     <div id="result"></div>
 
     <script>
-        const supabaseUrl = 'YOUR_SUPABASE_URL'
-        const supabaseKey = 'YOUR_SUPABASE_ANON_KEY'
+        // Replace these with your actual Supabase values
+        const supabaseUrl = 'https://houxspywdwtxmsfqekvp.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhvdXhzcHl3ZHd0eG1zZnFla3ZwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQ0NzQ4MzAsImV4cCI6MjA1MDA1MDgzMH0.REPLACE_WITH_YOUR_ACTUAL_ANON_KEY'
+        
+        // Initialize Supabase client
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
 
         async function testDatabase() {

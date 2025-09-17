@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Profile } from '@/lib/types'
-import { useRouter } from 'next/navigation'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
 

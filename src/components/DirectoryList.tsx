@@ -18,7 +18,7 @@ export default function DirectoryList() {
       console.log('DirectoryList: Fetching profiles...')
       
       // First try with is_hidden filter
-      let { data, error: queryError } = await supabase
+      const { data, error: queryError } = await supabase
         .from('profiles')
         .select('*')
         .eq('is_hidden', false)
@@ -38,12 +38,12 @@ export default function DirectoryList() {
           throw fallbackResult.error
         }
         
-        data = fallbackResult.data
-        console.log('DirectoryList: Fallback query successful, got profiles:', data)
+        console.log('DirectoryList: Fallback query successful, got profiles:', fallbackResult.data)
+        setProfiles(fallbackResult.data || [])
+      } else {
+        console.log('DirectoryList: Fetched profiles:', data)
+        setProfiles(data || [])
       }
-      
-      console.log('DirectoryList: Fetched profiles:', data)
-      setProfiles(data || [])
     } catch (error) {
       console.error('Error fetching profiles:', error)
     } finally {

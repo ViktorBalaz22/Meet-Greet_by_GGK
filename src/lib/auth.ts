@@ -89,7 +89,7 @@ export async function requireAuth(): Promise<User> {
 }
 
 export async function requireAdmin(): Promise<Profile> {
-  const user = await requireAuth()
+  await requireAuth()
   const profile = await getProfile()
   
   if (!profile || !profile.is_admin) {

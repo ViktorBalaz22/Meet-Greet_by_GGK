@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-export default function LoginPage() {
+function LoginForm() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -125,5 +125,26 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+        <div className="max-w-md w-full space-y-8">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            </div>
+            <h2 className="text-3xl font-bold text-gray-900 mb-2">
+              Načítavam...
+            </h2>
+          </div>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

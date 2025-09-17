@@ -144,7 +144,8 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -328,5 +329,6 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         Po uložení profilu môžete prehliadať ostatných účastníkov
       </p>
     </div>
+    </>
   )
 }

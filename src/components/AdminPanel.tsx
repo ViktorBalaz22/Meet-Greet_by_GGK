@@ -32,14 +32,14 @@ export default function AdminPanel() {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ is_hidden: !currentHidden })
+        .update({ hidden: !currentHidden })
         .eq('id', profileId)
 
       if (error) throw error
 
       setProfiles(profiles.map(profile => 
         profile.id === profileId 
-          ? { ...profile, is_hidden: !currentHidden }
+          ? { ...profile, hidden: !currentHidden }
           : profile
       ))
     } catch (error) {
@@ -155,7 +155,7 @@ END:VCARD`
                         Admin
                       </span>
                     )}
-                    {profile.is_hidden && (
+                    {profile.hidden && (
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                         Skrytý
                       </span>
@@ -171,14 +171,14 @@ END:VCARD`
                 
                 <div className="flex items-center space-x-2">
                   <button
-                    onClick={() => toggleHidden(profile.id, profile.is_hidden)}
+                    onClick={() => toggleHidden(profile.id, profile.hidden)}
                     className={`inline-flex items-center px-3 py-1 rounded-md text-sm font-medium ${
-                      profile.is_hidden
+                      profile.hidden
                         ? 'bg-green-100 text-green-800 hover:bg-green-200'
                         : 'bg-red-100 text-red-800 hover:bg-red-200'
                     }`}
                   >
-                    {profile.is_hidden ? 'Zobraziť' : 'Skryť'}
+                    {profile.hidden ? 'Zobraziť' : 'Skryť'}
                   </button>
                 </div>
               </div>

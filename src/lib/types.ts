@@ -11,7 +11,7 @@ export interface Profile {
   photo_path: string | null
   is_admin: boolean
   agreed_gdpr: boolean
-  is_hidden: boolean
+  hidden: boolean
   created_at: string
   updated_at: string
 }

@@ -17,17 +17,17 @@ export default function DirectoryList() {
     try {
       console.log('DirectoryList: Fetching profiles...')
       
-      // First try with is_hidden filter
+      // First try with hidden filter
       const { data, error: queryError } = await supabase
         .from('profiles')
         .select('*')
-        .eq('is_hidden', false)
+        .eq('hidden', false)
         .order('created_at', { ascending: false })
 
       if (queryError) {
-        console.error('DirectoryList: Error with is_hidden filter:', queryError)
+        console.error('DirectoryList: Error with hidden filter:', queryError)
         // Fallback: try without filter to see if RLS is the issue
-        console.log('DirectoryList: Trying without is_hidden filter...')
+        console.log('DirectoryList: Trying without hidden filter...')
         const fallbackResult = await supabase
           .from('profiles')
           .select('*')
@@ -76,7 +76,7 @@ export default function DirectoryList() {
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
-        .eq('is_hidden', false)
+        .eq('hidden', false)
         .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,about.ilike.%${query}%`)
         .order('created_at', { ascending: false })
 

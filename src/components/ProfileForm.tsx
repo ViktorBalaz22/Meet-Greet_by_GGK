@@ -139,8 +139,7 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
         about: formData.about,
         photo_path: photoPath,
         agreed_gdpr: formData.agreed_gdpr,
-        is_hidden: false, // Make profile visible by default
-        is_admin: false, // Regular user by default
+        hidden: false, // Make profile visible by default (correct column name)
       }
       
       console.log('Profile data being sent to Supabase:', profileData)

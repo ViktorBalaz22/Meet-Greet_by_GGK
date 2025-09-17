@@ -80,7 +80,7 @@ export default function Navigation() {
                   href="/profile/edit"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                 >
-                  Môj profil
+                  ✏️ Môj profil
                 </Link>
                 
                 {profile.is_admin && (

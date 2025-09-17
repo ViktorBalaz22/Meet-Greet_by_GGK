@@ -1,30 +1,27 @@
 'use client'
 
 import { Profile } from '@/lib/types'
-import { supabase } from '@/lib/supabase'
+import { useSupabase } from '@/contexts/SupabaseContext'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface AttendeeCardProps {
   profile: Profile
 }
 
 export default function AttendeeCard({ profile }: AttendeeCardProps) {
+  const { supabase } = useSupabase()
   const [photoUrl, setPhotoUrl] = useState<string | null>(null)
 
   // Get photo URL from Supabase Storage
-  const getPhotoUrl = async () => {
-    if (profile.photo_path) {
+  useEffect(() => {
+    if (supabase && profile.photo_path) {
       const { data } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
       setPhotoUrl(data.publicUrl)
     }
-  }
-
-  useState(() => {
-    getPhotoUrl()
-  })
+  }, [supabase, profile.photo_path])
 
   const handleDownloadVCard = () => {
     // Generate vCard content
@@ -53,29 +50,11 @@ END:VCARD`
     window.URL.revokeObjectURL(url)
   }
 
-  const handleShare = async () => {
-    const shareData = {
-      title: `${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} - ${profile.company}`,
-      text: `Pozrite si profil ${`${profile.first_name || ""} ${profile.last_name || ""}`.trim()} z ${profile.company}`,
-      url: `${window.location.origin}/profile/${profile.id}`,
-    }
-
-    if (navigator.share) {
-      try {
-        await navigator.share(shareData)
-      } catch (err) {
-        console.log('Error sharing:', err)
-      }
-    } else {
-      // Fallback: copy to clipboard
-      navigator.clipboard.writeText(shareData.url)
-      alert('Odkaz bol skopírovaný do schránky')
-    }
-  }
 
   return (
-    <div className="p-6 hover:bg-gray-50 transition-colors">
-      <div className="flex items-start space-x-4">
+    <Link href={`/profile/${profile.id}`} className="block">
+      <div className="p-6 hover:bg-gray-50 transition-colors cursor-pointer">
+        <div className="flex items-start space-x-4">
         {/* Photo */}
         <div className="flex-shrink-0">
           {photoUrl ? (
@@ -106,7 +85,11 @@ END:VCARD`
             </div>
             <div className="flex space-x-2">
               <button
-                onClick={handleDownloadVCard}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  handleDownloadVCard()
+                }}
                 className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,25 +97,6 @@ END:VCARD`
                 </svg>
                 vCard
               </button>
-              <button
-                onClick={handleShare}
-                className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-                </svg>
-                Zdieľať
-              </button>
-              <Link
-                href={`/profile/${profile.id}`}
-                className="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-                Detail
-              </Link>
             </div>
           </div>
 
@@ -163,6 +127,7 @@ END:VCARD`
           )}
         </div>
       </div>
-    </div>
+      </div>
+    </Link>
   )
 }

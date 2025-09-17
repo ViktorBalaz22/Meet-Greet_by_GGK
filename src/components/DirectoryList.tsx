@@ -60,14 +60,19 @@ export default function DirectoryList() {
   const handleSearch = async (query: string) => {
     setSearchQuery(query)
     
-    if (!supabase) return
+    if (!supabase) {
+      console.log('DirectoryList: No supabase client available for search')
+      return
+    }
     
     if (!query.trim()) {
+      console.log('DirectoryList: Empty query, fetching all profiles')
       fetchProfiles()
       return
     }
 
     try {
+      console.log('DirectoryList: Searching for:', query)
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -75,7 +80,12 @@ export default function DirectoryList() {
         .or(`first_name.ilike.%${query}%,last_name.ilike.%${query}%,company.ilike.%${query}%,position.ilike.%${query}%,about.ilike.%${query}%`)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('DirectoryList: Search error:', error)
+        throw error
+      }
+      
+      console.log('DirectoryList: Search results:', data)
       setProfiles(data || [])
     } catch (error) {
       console.error('Error searching profiles:', error)
@@ -105,7 +115,7 @@ export default function DirectoryList() {
             placeholder="Hľadať podľa mena, firmy, pozície..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
           />
         </div>
       </div>

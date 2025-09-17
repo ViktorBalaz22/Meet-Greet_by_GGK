@@ -97,14 +97,6 @@ export default function AppPage() {
                 Prepojte sa s ostatnými účastníkmi eventu
               </p>
             </div>
-            <div className="mt-4 sm:mt-0">
-              <button
-                onClick={() => router.push('/profile/edit')}
-                className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-              >
-                ✏️ Upraviť môj profil
-              </button>
-            </div>
           </div>
         </div>
         <DirectoryList />

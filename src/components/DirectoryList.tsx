@@ -21,13 +21,34 @@ export default function DirectoryList() {
     if (!supabase) return
 
     try {
-      const { data, error } = await supabase
+      console.log('DirectoryList: Fetching profiles...')
+      
+      // First try with is_hidden filter
+      let { data, error } = await supabase
         .from('profiles')
         .select('*')
         .eq('is_hidden', false)
         .order('created_at', { ascending: false })
 
-      if (error) throw error
+      if (error) {
+        console.error('DirectoryList: Error with is_hidden filter:', error)
+        // Fallback: try without filter to see if RLS is the issue
+        console.log('DirectoryList: Trying without is_hidden filter...')
+        const fallbackResult = await supabase
+          .from('profiles')
+          .select('*')
+          .order('created_at', { ascending: false })
+        
+        if (fallbackResult.error) {
+          console.error('DirectoryList: Error without filter too:', fallbackResult.error)
+          throw fallbackResult.error
+        }
+        
+        data = fallbackResult.data
+        console.log('DirectoryList: Fallback query successful, got profiles:', data)
+      }
+      
+      console.log('DirectoryList: Fetched profiles:', data)
       setProfiles(data || [])
     } catch (error) {
       console.error('Error fetching profiles:', error)

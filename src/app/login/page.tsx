@@ -42,6 +42,10 @@ function LoginForm() {
         email,
         options: {
           emailRedirectTo: redirectUrl,
+          // Use query parameters instead of hash fragments for better mobile compatibility
+          data: {
+            redirect_to: redirectUrl
+          }
         },
       })
 

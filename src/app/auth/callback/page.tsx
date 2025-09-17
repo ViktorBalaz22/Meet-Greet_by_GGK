@@ -13,6 +13,8 @@ export default function AuthCallbackPage() {
     const handleAuthCallback = async () => {
       try {
         console.log('Auth callback page loaded')
+        console.log('Current URL:', window.location.href)
+        console.log('User Agent:', navigator.userAgent)
         
         // Create Supabase client dynamically to avoid SSR issues
         const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -26,24 +28,38 @@ export default function AuthCallbackPage() {
         
         const supabase = createClient(supabaseUrl, supabaseKey)
         
-        // Get the hash fragment from the URL
+        // Try to get tokens from both hash fragment and query parameters
+        // This handles different mobile email app behaviors
         const hash = window.location.hash.substring(1)
+        const search = window.location.search.substring(1)
+        
         console.log('Hash fragment:', hash)
+        console.log('Search params:', search)
         
-        if (!hash) {
-          console.log('No hash fragment found, redirecting to login')
-          router.push('/login?error=No authentication data found')
-          return
+        let accessToken: string | null = null
+        let refreshToken: string | null = null
+        let error: string | null = null
+        let errorDescription: string | null = null
+        
+        // First try query parameters (better for mobile)
+        if (search) {
+          const searchParams = new URLSearchParams(search)
+          accessToken = searchParams.get('access_token')
+          refreshToken = searchParams.get('refresh_token')
+          error = searchParams.get('error')
+          errorDescription = searchParams.get('error_description')
         }
-
-        // Parse the hash parameters
-        const hashParams = new URLSearchParams(hash)
-        const accessToken = hashParams.get('access_token')
-        const refreshToken = hashParams.get('refresh_token')
-        const error = hashParams.get('error')
-        const errorDescription = hashParams.get('error_description')
         
-        console.log('Hash params:', { 
+        // If no tokens in query params, try hash fragment (fallback)
+        if (!accessToken && hash) {
+          const hashParams = new URLSearchParams(hash)
+          accessToken = hashParams.get('access_token')
+          refreshToken = hashParams.get('refresh_token')
+          error = hashParams.get('error')
+          errorDescription = hashParams.get('error_description')
+        }
+        
+        console.log('Extracted params:', { 
           accessToken: accessToken ? 'present' : 'missing',
           refreshToken: refreshToken ? 'present' : 'missing',
           error: error || 'none',
@@ -68,8 +84,14 @@ export default function AuthCallbackPage() {
         }
 
         if (!accessToken || !refreshToken) {
-          console.log('Missing tokens, redirecting to login')
-          router.push('/login?error=Invalid authentication data')
+          console.log('Missing tokens, trying server-side fallback')
+          
+          // Try server-side API route as fallback
+          const serverUrl = new URL('/api/auth/callback', window.location.origin)
+          serverUrl.search = window.location.search
+          
+          console.log('Redirecting to server-side callback:', serverUrl.toString())
+          window.location.href = serverUrl.toString()
           return
         }
 
@@ -91,9 +113,22 @@ export default function AuthCallbackPage() {
         // Wait a moment for the session to be established
         await new Promise(resolve => setTimeout(resolve, 1000))
         
-               // Redirect to main app (attendees list)
-               console.log('Redirecting to /app')
-               window.location.href = '/app'
+        // Verify the session is working
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        if (userError || !user) {
+          console.error('Session verification failed:', userError)
+          setError('Session verification failed')
+          return
+        }
+        
+        console.log('Session verified, user:', user.email)
+        
+        // Clear the URL to remove sensitive tokens
+        window.history.replaceState({}, document.title, '/auth/callback')
+        
+        // Redirect to main app (attendees list)
+        console.log('Redirecting to /app')
+        window.location.href = '/app'
         
       } catch (err) {
         console.error('Auth callback error:', err)

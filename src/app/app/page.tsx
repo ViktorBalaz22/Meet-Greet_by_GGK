@@ -1,17 +1,84 @@
-import { redirect } from 'next/navigation'
-import { getUser, getProfile } from '@/lib/auth'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
+import { Profile, User } from '@/lib/types'
 import ProfileForm from '@/components/ProfileForm'
 import DirectoryList from '@/components/DirectoryList'
 import Navigation from '@/components/Navigation'
 
-export default async function AppPage() {
-  const user = await getUser()
-  
-  if (!user) {
-    redirect('/login')
+export default function AppPage() {
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [profile, setProfile] = useState<Profile | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const supabase = createClient(
+          process.env.NEXT_PUBLIC_SUPABASE_URL!,
+          process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+        )
+
+        const { data: { user }, error: userError } = await supabase.auth.getUser()
+        
+        if (userError) {
+          console.error('Error getting user:', userError)
+          router.push('/login')
+          return
+        }
+
+        if (!user) {
+          router.push('/login')
+          return
+        }
+
+        setUser({
+          id: user.id,
+          email: user.email!,
+          created_at: user.created_at
+        })
+
+        // Get profile
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('email', user.email)
+          .single()
+
+        if (profileError) {
+          console.error('Error getting profile:', profileError)
+        } else {
+          setProfile(profileData)
+        }
+
+      } catch (error) {
+        console.error('Error in checkAuth:', error)
+        router.push('/login')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    checkAuth()
+  }, [router])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Načítavam...</p>
+        </div>
+      </div>
+    )
   }
 
-  const profile = await getProfile()
+  if (!user) {
+    return null // Will redirect to login
+  }
 
   // If user doesn't have a complete profile, show the form
   if (!profile || !profile.first_name || !profile.last_name || !profile.company || !profile.agreed_gdpr) {

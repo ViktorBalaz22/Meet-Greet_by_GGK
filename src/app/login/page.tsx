@@ -3,14 +3,22 @@
 import { useState, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const [redirectUrl, setRedirectUrl] = useState('')
+  const searchParams = useSearchParams()
 
   useEffect(() => {
+    // Check for error parameter in URL
+    const error = searchParams.get('error')
+    if (error) {
+      setMessage(decodeURIComponent(error))
+    }
+
     // Use production URL if available, otherwise fall back to current origin
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
     const redirect = `${baseUrl}/auth/callback`
@@ -21,7 +29,7 @@ export default function LoginPage() {
       windowOrigin: window.location.origin
     })
     setRedirectUrl(redirect)
-  }, [])
+  }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()

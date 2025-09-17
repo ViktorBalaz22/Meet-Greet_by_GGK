@@ -40,11 +40,32 @@ export default function AuthCallbackPage() {
         const hashParams = new URLSearchParams(hash)
         const accessToken = hashParams.get('access_token')
         const refreshToken = hashParams.get('refresh_token')
+        const error = hashParams.get('error')
+        const errorDescription = hashParams.get('error_description')
         
-        console.log('Tokens found:', { 
+        console.log('Hash params:', { 
           accessToken: accessToken ? 'present' : 'missing',
-          refreshToken: refreshToken ? 'present' : 'missing'
+          refreshToken: refreshToken ? 'present' : 'missing',
+          error: error || 'none',
+          errorDescription: errorDescription || 'none'
         })
+
+        // Check for errors first
+        if (error) {
+          console.log('Authentication error:', error, errorDescription)
+          let errorMessage = 'Authentication failed'
+          
+          if (error === 'otp_expired') {
+            errorMessage = 'Prihlasovací odkaz vypršal. Požiadajte o nový odkaz.'
+          } else if (error === 'access_denied') {
+            errorMessage = 'Prístup zamietnutý. Skúste sa prihlásiť znova.'
+          } else if (errorDescription) {
+            errorMessage = decodeURIComponent(errorDescription)
+          }
+          
+          router.push(`/login?error=${encodeURIComponent(errorMessage)}`)
+          return
+        }
 
         if (!accessToken || !refreshToken) {
           console.log('Missing tokens, redirecting to login')

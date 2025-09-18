@@ -73,7 +73,11 @@ function VerifyOTPForm() {
         console.log('Redirecting to /app after successful OTP verification')
         setTimeout(() => {
           console.log('Executing redirect to /app')
-          window.location.replace('/app')
+          // Use the full URL to ensure proper redirect
+          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+          const appUrl = `${baseUrl}/app`
+          console.log('Redirecting to:', appUrl)
+          window.location.replace(appUrl)
         }, 1000)
       }
     } catch (err) {

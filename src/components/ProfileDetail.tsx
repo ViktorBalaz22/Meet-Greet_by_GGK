@@ -19,16 +19,12 @@ export default function ProfileDetail({ profile }: ProfileDetailProps) {
   useEffect(() => {
     if (supabase && profile.photo_path) {
       console.log('ProfileDetail: Getting photo URL for path:', profile.photo_path)
-      const { data, error } = supabase.storage
+      const { data } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
       
-      if (error) {
-        console.error('ProfileDetail: Error getting public URL:', error)
-      } else {
-        console.log('ProfileDetail: Generated photo URL:', data.publicUrl)
-        setPhotoUrl(data.publicUrl)
-      }
+      console.log('ProfileDetail: Generated photo URL:', data.publicUrl)
+      setPhotoUrl(data.publicUrl)
     } else {
       console.log('ProfileDetail: No photo path or supabase client:', { 
         hasSupabase: !!supabase, 

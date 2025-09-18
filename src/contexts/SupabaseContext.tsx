@@ -1,8 +1,9 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState } from 'react'
-import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
 import { User } from '@/lib/types'
+import { supabase } from '@/lib/supabase'
 
 interface SupabaseContextType {
   supabase: SupabaseClient | null
@@ -17,27 +18,21 @@ const SupabaseContext = createContext<SupabaseContextType>({
 })
 
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
-  const [supabase, setSupabase] = useState<SupabaseClient | null>(null)
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-    if (!supabaseUrl || !supabaseKey) {
-      console.error('Missing Supabase environment variables')
+    // Use the shared supabase client instance
+    if (!supabase) {
+      console.error('Supabase client not available')
       setLoading(false)
       return
     }
 
-    const client = createClient(supabaseUrl, supabaseKey)
-    setSupabase(client)
-
     // Get initial user
     const getUser = async () => {
       try {
-        const { data: { user }, error } = await client.auth.getUser()
+        const { data: { user }, error } = await supabase.auth.getUser()
         if (error) {
           console.error('Error getting user:', error)
         } else if (user) {
@@ -57,7 +52,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     getUser()
 
     // Listen for auth changes
-    const { data: { subscription } } = client.auth.onAuthStateChange(
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (session?.user) {
           setUser({
@@ -91,3 +86,4 @@ export function useSupabase() {
   }
   return context
 }
+

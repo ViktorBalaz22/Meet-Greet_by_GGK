@@ -18,10 +18,22 @@ export default function ProfileDetail({ profile }: ProfileDetailProps) {
   // Get photo URL from Supabase Storage
   useEffect(() => {
     if (supabase && profile.photo_path) {
-      const { data } = supabase.storage
+      console.log('ProfileDetail: Getting photo URL for path:', profile.photo_path)
+      const { data, error } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
-      setPhotoUrl(data.publicUrl)
+      
+      if (error) {
+        console.error('ProfileDetail: Error getting public URL:', error)
+      } else {
+        console.log('ProfileDetail: Generated photo URL:', data.publicUrl)
+        setPhotoUrl(data.publicUrl)
+      }
+    } else {
+      console.log('ProfileDetail: No photo path or supabase client:', { 
+        hasSupabase: !!supabase, 
+        photoPath: profile.photo_path 
+      })
     }
   }, [supabase, profile.photo_path])
 
@@ -81,6 +93,14 @@ END:VCARD`
                   className="h-32 w-32 rounded-full object-cover mx-auto md:mx-0"
                   src={photoUrl}
                   alt={`${profile.first_name || ""} ${profile.last_name || ""}`.trim()}
+                  onError={(e) => {
+                    console.error('ProfileDetail: Image failed to load:', photoUrl)
+                    console.error('ProfileDetail: Error event:', e)
+                    setPhotoUrl(null)
+                  }}
+                  onLoad={() => {
+                    console.log('ProfileDetail: Image loaded successfully:', photoUrl)
+                  }}
                 />
               ) : (
                 <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center mx-auto md:mx-0">

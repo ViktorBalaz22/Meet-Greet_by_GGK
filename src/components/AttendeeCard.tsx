@@ -17,11 +17,16 @@ export default function AttendeeCard({ profile }: AttendeeCardProps) {
   useEffect(() => {
     if (supabase && profile.photo_path) {
       console.log('AttendeeCard: Getting photo URL for path:', profile.photo_path)
-      const { data } = supabase.storage
+      const { data, error } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
-      console.log('AttendeeCard: Generated photo URL:', data.publicUrl)
-      setPhotoUrl(data.publicUrl)
+      
+      if (error) {
+        console.error('AttendeeCard: Error getting public URL:', error)
+      } else {
+        console.log('AttendeeCard: Generated photo URL:', data.publicUrl)
+        setPhotoUrl(data.publicUrl)
+      }
     } else {
       console.log('AttendeeCard: No photo path or supabase client:', { 
         hasSupabase: !!supabase, 
@@ -69,6 +74,14 @@ END:VCARD`
               className="h-16 w-16 rounded-full object-cover"
               src={photoUrl}
               alt={`${profile.first_name || ''} ${profile.last_name || ''}`.trim()}
+              onError={(e) => {
+                console.error('AttendeeCard: Image failed to load:', photoUrl)
+                console.error('AttendeeCard: Error event:', e)
+                setPhotoUrl(null)
+              }}
+              onLoad={() => {
+                console.log('AttendeeCard: Image loaded successfully:', photoUrl)
+              }}
             />
           ) : (
             <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center">

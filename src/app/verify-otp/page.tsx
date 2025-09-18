@@ -68,45 +68,24 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Set the session explicitly to ensure it's established
+        // Store session data in localStorage for the app page to use
         if (data.session) {
-          console.log('Setting session explicitly...')
-          const { error: sessionError } = await supabase.auth.setSession({
+          console.log('Storing session data in localStorage...')
+          localStorage.setItem('supabase_session', JSON.stringify({
             access_token: data.session.access_token,
             refresh_token: data.session.refresh_token,
-          })
-          
-          if (sessionError) {
-            console.error('Error setting session:', sessionError)
-          } else {
-            console.log('Session set successfully')
-          }
+            expires_at: data.session.expires_at
+          }))
+          console.log('Session data stored successfully')
         }
         
-        // Wait for session to be established, then redirect
-        setTimeout(async () => {
-          console.log('Executing redirect to /app')
-          
-          // Verify the session is working before redirect
-          const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
-          console.log('Current user before redirect:', currentUser)
-          console.log('User error before redirect:', userError)
-          
-          // Use the environment variable for the base URL
-          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-          const targetUrl = `${baseUrl}/app`
-          
-          console.log('Base URL from env:', process.env.NEXT_PUBLIC_APP_URL)
-          console.log('Target URL:', targetUrl)
-          
-          try {
-            window.location.href = targetUrl
-          } catch (error) {
-            console.error('Redirect error:', error)
-            // Fallback to router
-            router.push('/app')
-          }
-        }, 3000) // Increased wait time
+        // Redirect immediately with success parameter
+        console.log('Redirecting to /app with success parameter')
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+        const targetUrl = `${baseUrl}/app?auth=success`
+        
+        console.log('Target URL:', targetUrl)
+        window.location.href = targetUrl
       }
     } catch (err) {
       console.error('OTP verification error:', err)

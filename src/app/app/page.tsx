@@ -16,6 +16,36 @@ export default function AppPage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      // Check if we have stored session data from OTP verification
+      const storedSession = localStorage.getItem('supabase_session')
+      if (storedSession && supabase) {
+        try {
+          console.log('Found stored session, attempting to restore...')
+          const sessionData = JSON.parse(storedSession)
+          const { error } = await supabase.auth.setSession({
+            access_token: sessionData.access_token,
+            refresh_token: sessionData.refresh_token,
+          })
+          
+          if (error) {
+            console.error('Error restoring session:', error)
+            localStorage.removeItem('supabase_session')
+          } else {
+            console.log('Session restored successfully')
+            // Clear the stored session data
+            localStorage.removeItem('supabase_session')
+            // Wait a moment for the context to update
+            setTimeout(() => {
+              window.location.reload()
+            }, 1000)
+            return
+          }
+        } catch (error) {
+          console.error('Error parsing stored session:', error)
+          localStorage.removeItem('supabase_session')
+        }
+      }
+      
       if (!supabase || !user) {
         console.log('No user found, redirecting to login')
         router.push('/login')

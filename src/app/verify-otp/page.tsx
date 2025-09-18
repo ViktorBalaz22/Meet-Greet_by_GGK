@@ -62,8 +62,18 @@ function VerifyOTPForm() {
         }
       } else {
         console.log('OTP verification successful:', data)
-        // Redirect to main app
-        router.push('/app')
+        console.log('Session data:', data.session)
+        console.log('User data:', data.user)
+        
+        // Show success message
+        setMessage('Overenie úspešné! Presmerovávam...')
+        
+        // Wait a moment for the session to be established
+        await new Promise(resolve => setTimeout(resolve, 1500))
+        
+        // Force redirect using window.location
+        console.log('Redirecting to /app using window.location')
+        window.location.href = '/app'
       }
     } catch (err) {
       console.error('OTP verification error:', err)

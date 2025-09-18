@@ -29,7 +29,7 @@ function LoginForm() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          shouldCreateUser: false, // Only allow existing users to sign in
+          shouldCreateUser: true, // Allow new users to sign up
         },
       })
 

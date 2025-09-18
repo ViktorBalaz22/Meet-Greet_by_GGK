@@ -102,7 +102,7 @@ function VerifyOTPForm() {
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          shouldCreateUser: false,
+          shouldCreateUser: true, // Allow new users to sign up
         },
       })
 

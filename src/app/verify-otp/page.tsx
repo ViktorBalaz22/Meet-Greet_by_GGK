@@ -68,29 +68,33 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Listen for auth state change to ensure session is properly established
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(
-          async (event, session) => {
-            console.log('Auth state change:', event, session)
-            if (event === 'SIGNED_IN' && session) {
-              console.log('User signed in successfully, redirecting...')
-              const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-              const targetUrl = `${baseUrl}/app`
-              console.log('Redirecting to:', targetUrl)
-              window.location.href = targetUrl
-              subscription.unsubscribe()
-            }
+        // Use the same approach as the working magic link: set session explicitly
+        if (data.session) {
+          console.log('Setting session explicitly like magic link approach...')
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          })
+          
+          if (sessionError) {
+            console.error('Error setting session:', sessionError)
+            setMessage('Chyba pri nastavení relácie: ' + sessionError.message)
+            return
           }
-        )
-        
-        // Fallback redirect after 3 seconds if auth state change doesn't fire
-        setTimeout(() => {
-          console.log('Fallback redirect after timeout...')
+          
+          console.log('Session set successfully, redirecting...')
+          // Wait a moment for session to be established
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          
+          // Redirect to app
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
           const targetUrl = `${baseUrl}/app`
           console.log('Redirecting to:', targetUrl)
           window.location.href = targetUrl
-        }, 3000)
+        } else {
+          console.error('No session data in OTP response')
+          setMessage('Chyba: Žiadne údaje o relácii')
+        }
       }
     } catch (err) {
       console.error('OTP verification error:', err)

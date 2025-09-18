@@ -9,7 +9,13 @@ const createSupabaseClient = () => {
     // Return a mock client for build time
     return createClient('https://placeholder.supabase.co', 'placeholder-key')
   }
-  return createClient(supabaseUrl, supabaseAnonKey)
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  })
 }
 
 export const supabase = createSupabaseClient()

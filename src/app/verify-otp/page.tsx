@@ -68,24 +68,15 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Store session data in localStorage for the app page to use
-        if (data.session) {
-          console.log('Storing session data in localStorage...')
-          localStorage.setItem('supabase_session', JSON.stringify({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-            expires_at: data.session.expires_at
-          }))
-          console.log('Session data stored successfully')
-        }
-        
-        // Redirect immediately with success parameter
-        console.log('Redirecting to /app with success parameter')
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-        const targetUrl = `${baseUrl}/app?auth=success`
-        
-        console.log('Target URL:', targetUrl)
-        window.location.href = targetUrl
+        // Force a page reload to ensure the session is properly established
+        // This is a common workaround for Supabase OTP session issues
+        console.log('Forcing page reload to establish session...')
+        setTimeout(() => {
+          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+          const targetUrl = `${baseUrl}/app`
+          console.log('Redirecting to:', targetUrl)
+          window.location.href = targetUrl
+        }, 1000)
       }
     } catch (err) {
       console.error('OTP verification error:', err)

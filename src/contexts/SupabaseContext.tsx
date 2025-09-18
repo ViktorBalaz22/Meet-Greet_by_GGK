@@ -29,18 +29,22 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       return
     }
 
-    // Get initial user
+    // Get initial user only if there's a session
     const getUser = async () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser()
-        if (error) {
-          console.error('Error getting user:', error)
-        } else if (user) {
-          setUser({
-            id: user.id,
-            email: user.email!,
-            created_at: user.created_at
-          })
+        // First check if there's a session without calling getUser
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session?.user) {
+          const { data: { user }, error } = await supabase.auth.getUser()
+          if (error) {
+            console.error('Error getting user:', error)
+          } else if (user) {
+            setUser({
+              id: user.id,
+              email: user.email!,
+              created_at: user.created_at
+            })
+          }
         }
       } catch (error) {
         console.error('Error in getUser:', error)

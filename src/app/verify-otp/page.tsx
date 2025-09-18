@@ -69,16 +69,22 @@ function VerifyOTPForm() {
         setMessage('Overenie úspešné! Presmerovávam...')
         
         // Redirect immediately after successful verification
-        // Don't check user status as it may cause session errors
         console.log('Redirecting to /app after successful OTP verification')
-        setTimeout(() => {
+        
+        // Wait a bit longer for session to be established, then redirect
+        setTimeout(async () => {
           console.log('Executing redirect to /app')
-          // Use the full URL to ensure proper redirect
-          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-          const appUrl = `${baseUrl}/app`
-          console.log('Redirecting to:', appUrl)
-          window.location.replace(appUrl)
-        }, 1000)
+          
+          // Try to refresh the page to ensure session is loaded
+          try {
+            // Force a page refresh to ensure the session is properly loaded
+            window.location.href = '/app'
+          } catch (error) {
+            console.error('Redirect error:', error)
+            // Fallback to router
+            router.push('/app')
+          }
+        }, 2000)
       }
     } catch (err) {
       console.error('OTP verification error:', err)

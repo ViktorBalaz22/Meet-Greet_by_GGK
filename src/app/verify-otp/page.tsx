@@ -68,15 +68,29 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Force a page reload to ensure the session is properly established
-        // This is a common workaround for Supabase OTP session issues
-        console.log('Forcing page reload to establish session...')
+        // Listen for auth state change to ensure session is properly established
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(
+          async (event, session) => {
+            console.log('Auth state change:', event, session)
+            if (event === 'SIGNED_IN' && session) {
+              console.log('User signed in successfully, redirecting...')
+              const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+              const targetUrl = `${baseUrl}/app`
+              console.log('Redirecting to:', targetUrl)
+              window.location.href = targetUrl
+              subscription.unsubscribe()
+            }
+          }
+        )
+        
+        // Fallback redirect after 3 seconds if auth state change doesn't fire
         setTimeout(() => {
+          console.log('Fallback redirect after timeout...')
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
           const targetUrl = `${baseUrl}/app`
           console.log('Redirecting to:', targetUrl)
           window.location.href = targetUrl
-        }, 1000)
+        }, 3000)
       }
     } catch (err) {
       console.error('OTP verification error:', err)

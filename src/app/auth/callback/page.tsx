@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
@@ -12,123 +11,11 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log('Auth callback page loaded')
-        console.log('Current URL:', window.location.href)
-        console.log('User Agent:', navigator.userAgent)
+        console.log('Auth callback page loaded - redirecting to login')
         
-        // Create Supabase client dynamically to avoid SSR issues
-        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-        const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-        
-        if (!supabaseUrl || !supabaseKey) {
-          console.error('Missing Supabase environment variables')
-          setError('Configuration error: Missing Supabase credentials')
-          return
-        }
-        
-        const supabase = createClient(supabaseUrl, supabaseKey)
-        
-        // Try to get tokens from both hash fragment and query parameters
-        // This handles different mobile email app behaviors
-        const hash = window.location.hash.substring(1)
-        const search = window.location.search.substring(1)
-        
-        console.log('Hash fragment:', hash)
-        console.log('Search params:', search)
-        
-        let accessToken: string | null = null
-        let refreshToken: string | null = null
-        let error: string | null = null
-        let errorDescription: string | null = null
-        
-        // First try query parameters (better for mobile)
-        if (search) {
-          const searchParams = new URLSearchParams(search)
-          accessToken = searchParams.get('access_token')
-          refreshToken = searchParams.get('refresh_token')
-          error = searchParams.get('error')
-          errorDescription = searchParams.get('error_description')
-        }
-        
-        // If no tokens in query params, try hash fragment (fallback)
-        if (!accessToken && hash) {
-          const hashParams = new URLSearchParams(hash)
-          accessToken = hashParams.get('access_token')
-          refreshToken = hashParams.get('refresh_token')
-          error = hashParams.get('error')
-          errorDescription = hashParams.get('error_description')
-        }
-        
-        console.log('Extracted params:', { 
-          accessToken: accessToken ? 'present' : 'missing',
-          refreshToken: refreshToken ? 'present' : 'missing',
-          error: error || 'none',
-          errorDescription: errorDescription || 'none'
-        })
-
-        // Check for errors first
-        if (error) {
-          console.log('Authentication error:', error, errorDescription)
-          let errorMessage = 'Authentication failed'
-          
-          if (error === 'otp_expired') {
-            errorMessage = 'Prihlasovací odkaz vypršal. Požiadajte o nový odkaz.'
-          } else if (error === 'access_denied') {
-            errorMessage = 'Prístup zamietnutý. Skúste sa prihlásiť znova.'
-          } else if (errorDescription) {
-            errorMessage = decodeURIComponent(errorDescription)
-          }
-          
-          router.push(`/login?error=${encodeURIComponent(errorMessage)}`)
-          return
-        }
-
-        if (!accessToken || !refreshToken) {
-          console.log('Missing tokens, trying server-side fallback')
-          
-          // Try server-side API route as fallback
-          const serverUrl = new URL('/api/auth/callback', window.location.origin)
-          serverUrl.search = window.location.search
-          
-          console.log('Redirecting to server-side callback:', serverUrl.toString())
-          window.location.href = serverUrl.toString()
-          return
-        }
-
-        // Set the session directly using Supabase client
-        console.log('Setting session directly with Supabase client')
-        const { data, error: sessionError } = await supabase.auth.setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        })
-
-        if (sessionError) {
-          console.error('Error setting session:', sessionError)
-          setError('Failed to authenticate: ' + sessionError.message)
-          return
-        }
-
-        console.log('Session set successfully:', data)
-        
-        // Wait a moment for the session to be established
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Verify the session is working
-        const { data: { user }, error: userError } = await supabase.auth.getUser()
-        if (userError || !user) {
-          console.error('Session verification failed:', userError)
-          setError('Session verification failed')
-          return
-        }
-        
-        console.log('Session verified, user:', user.email)
-        
-        // Clear the URL to remove sensitive tokens
-        window.history.replaceState({}, document.title, '/auth/callback')
-        
-        // Redirect to main app (attendees list)
-        console.log('Redirecting to /app')
-        window.location.href = '/app'
+        // Since we're using OTP authentication, this callback is mainly for fallback
+        // Redirect users to the login page where they can start the OTP flow
+        router.push('/login')
         
       } catch (err) {
         console.error('Auth callback error:', err)

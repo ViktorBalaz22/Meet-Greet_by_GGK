@@ -9,7 +9,6 @@ function LoginForm() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
-  const [redirectUrl, setRedirectUrl] = useState('')
   const searchParams = useSearchParams()
 
   useEffect(() => {
@@ -18,17 +17,6 @@ function LoginForm() {
     if (error) {
       setMessage(decodeURIComponent(error))
     }
-
-    // Use production URL if available, otherwise fall back to current origin
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-    const redirect = `${baseUrl}/auth/callback`
-    console.log('Login page - constructing redirect URL:', {
-      baseUrl,
-      redirect,
-      envVar: process.env.NEXT_PUBLIC_APP_URL,
-      windowOrigin: window.location.origin
-    })
-    setRedirectUrl(redirect)
   }, [searchParams])
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -37,22 +25,19 @@ function LoginForm() {
     setMessage('')
 
     try {
-      console.log('Sending magic link with redirect URL:', redirectUrl)
+      console.log('Sending OTP to email:', email)
       const { error } = await supabase.auth.signInWithOtp({
         email,
         options: {
-          emailRedirectTo: redirectUrl,
-          // Use query parameters instead of hash fragments for better mobile compatibility
-          data: {
-            redirect_to: redirectUrl
-          }
+          shouldCreateUser: false, // Only allow existing users to sign in
         },
       })
 
       if (error) {
         setMessage('Chyba pri odosielaní e-mailu: ' + error.message)
       } else {
-        setMessage('Skontrolujte svoj e-mail pre prihlasovací odkaz!')
+        // Redirect to OTP verification page with email parameter
+        window.location.href = `/verify-otp?email=${encodeURIComponent(email)}`
       }
     } catch {
       setMessage('Nastala neočakávaná chyba')
@@ -78,7 +63,7 @@ function LoginForm() {
             Prihlásenie
           </h2>
           <p className="text-gray-600">
-            Zadajte svoj e-mail a pošleme vám prihlasovací odkaz
+            Zadajte svoj e-mail a pošleme vám 6-miestny overovací kód
           </p>
         </div>
 
@@ -105,7 +90,7 @@ function LoginForm() {
             disabled={loading}
             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Odosielam...' : 'Pošli prihlasovací odkaz'}
+            {loading ? 'Odosielam...' : 'Pošli overovací kód'}
           </button>
 
           {message && (

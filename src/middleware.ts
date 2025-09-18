@@ -9,10 +9,11 @@ export async function middleware(request: NextRequest) {
       },
     })
 
-    // Skip auth check for auth callback, OTP verification, and app page to prevent server-side errors
+    // Skip auth check for auth callback, OTP verification, app page, and profile routes to prevent server-side errors
     if (request.nextUrl.pathname === '/auth/callback' || 
         request.nextUrl.pathname === '/verify-otp' ||
-        request.nextUrl.pathname === '/app') {
+        request.nextUrl.pathname === '/app' ||
+        request.nextUrl.pathname.startsWith('/profile/')) {
       return response
     }
 
@@ -47,9 +48,8 @@ export async function middleware(request: NextRequest) {
       console.log('Available cookies:', request.cookies.getAll().map(c => c.name))
     }
 
-    // Protected routes
+    // Protected routes (excluding profile routes which are handled client-side)
     if (request.nextUrl.pathname.startsWith('/app') || 
-        request.nextUrl.pathname.startsWith('/profile') ||
         request.nextUrl.pathname.startsWith('/admin')) {
       if (!user) {
         console.log(`Redirecting to login from ${request.nextUrl.pathname} - no user`)

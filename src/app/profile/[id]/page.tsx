@@ -32,11 +32,15 @@ export default function ProfilePage({ params }: ProfilePageProps) {
 
       // Wait for auth to load before checking user
       if (authLoading) {
+        console.log('Auth still loading, waiting...')
         return
       }
 
+      // Add a small delay to ensure session is fully established
+      await new Promise(resolve => setTimeout(resolve, 100))
+
       if (!user) {
-        console.log('No user found, redirecting to login')
+        console.log('No user found after auth loaded, redirecting to login')
         router.push('/login')
         setLoading(false)
         return

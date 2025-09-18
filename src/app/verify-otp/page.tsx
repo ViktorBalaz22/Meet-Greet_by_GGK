@@ -75,15 +75,12 @@ function VerifyOTPForm() {
         setTimeout(async () => {
           console.log('Executing redirect to /app')
           
-          // Use the current domain but ensure we go to the production URL
-          const currentHost = window.location.hostname
-          let targetUrl = '/app'
+          // Use the environment variable for the base URL
+          const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
+          const targetUrl = `${baseUrl}/app`
           
-          // If we're on a Vercel preview URL, redirect to production
-          if (currentHost.includes('vercel.app') && !currentHost.includes('meet-greet-by-ggk')) {
-            targetUrl = 'https://meet-greet-by-ggk.vercel.app/app'
-            console.log('Redirecting to production URL:', targetUrl)
-          }
+          console.log('Base URL from env:', process.env.NEXT_PUBLIC_APP_URL)
+          console.log('Target URL:', targetUrl)
           
           try {
             window.location.href = targetUrl

@@ -13,9 +13,12 @@ export default function AppPage() {
   const { supabase, user, loading: authLoading } = useSupabase()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const fetchProfile = async () => {
+      console.log('App page - Auth state:', { supabase: !!supabase, user: !!user, authLoading })
+      
       if (!supabase || !user) {
         console.log('No user found, redirecting to login')
         router.push('/login')
@@ -44,7 +47,12 @@ export default function AppPage() {
     }
 
     fetchProfile()
-  }, [supabase, user])
+  }, [supabase, user, refreshKey])
+
+  const handleProfileSaved = () => {
+    console.log('Profile saved, refreshing...')
+    setRefreshKey(prev => prev + 1)
+  }
 
   if (authLoading || loading) {
     return (
@@ -76,7 +84,7 @@ export default function AppPage() {
               <p className="text-gray-600 mb-6">
                 Vyplňte svoje údaje pre vytvorenie digitálnej vizitky
               </p>
-              <ProfileForm profile={profile} />
+              <ProfileForm profile={profile} onProfileSaved={handleProfileSaved} />
             </div>
           </div>
         </div>

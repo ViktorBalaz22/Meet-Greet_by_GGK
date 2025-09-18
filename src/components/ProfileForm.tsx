@@ -1,15 +1,18 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
 
 interface ProfileFormProps {
   profile?: Profile | null
+  onProfileSaved?: () => void
 }
 
-export default function ProfileForm({ profile }: ProfileFormProps) {
+export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProps) {
+  const router = useRouter()
   const { supabase, user } = useSupabase()
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -187,12 +190,17 @@ export default function ProfileForm({ profile }: ProfileFormProps) {
       const result = await response.json()
       console.log('Profile saved successfully via API:', result)
 
-             setMessage('Profil bol úspešne uložený! Presmerovávam na zoznam účastníkov...')
-             
-             // Auto-redirect to main app after 2 seconds
-             setTimeout(() => {
-               window.location.href = '/app'
-             }, 2000)
+      setMessage('Profil bol úspešne uložený! Presmerovávam na zoznam účastníkov...')
+      
+      // Notify parent component that profile was saved
+      if (onProfileSaved) {
+        onProfileSaved()
+      }
+      
+      // Use router.push instead of window.location.href to maintain session
+      setTimeout(() => {
+        router.push('/app')
+      }, 2000)
     } catch (error: unknown) {
       setMessage('Chyba pri ukladaní profilu: ' + (error instanceof Error ? error.message : 'Neznáma chyba'))
     } finally {

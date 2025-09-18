@@ -14,3 +14,4 @@ declare module 'vcard-generator' {
   function vCardGenerator(options: VCardOptions): string
   export = vCardGenerator
 }
+

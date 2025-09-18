@@ -75,10 +75,18 @@ function VerifyOTPForm() {
         setTimeout(async () => {
           console.log('Executing redirect to /app')
           
-          // Try to refresh the page to ensure session is loaded
+          // Use the current domain but ensure we go to the production URL
+          const currentHost = window.location.hostname
+          let targetUrl = '/app'
+          
+          // If we're on a Vercel preview URL, redirect to production
+          if (currentHost.includes('vercel.app') && !currentHost.includes('meet-greet-by-ggk')) {
+            targetUrl = 'https://meet-greet-by-ggk.vercel.app/app'
+            console.log('Redirecting to production URL:', targetUrl)
+          }
+          
           try {
-            // Force a page refresh to ensure the session is properly loaded
-            window.location.href = '/app'
+            window.location.href = targetUrl
           } catch (error) {
             console.error('Redirect error:', error)
             // Fallback to router

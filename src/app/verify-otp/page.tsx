@@ -68,12 +68,29 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Redirect immediately after successful verification
-        console.log('Redirecting to /app after successful OTP verification')
+        // Set the session explicitly to ensure it's established
+        if (data.session) {
+          console.log('Setting session explicitly...')
+          const { error: sessionError } = await supabase.auth.setSession({
+            access_token: data.session.access_token,
+            refresh_token: data.session.refresh_token,
+          })
+          
+          if (sessionError) {
+            console.error('Error setting session:', sessionError)
+          } else {
+            console.log('Session set successfully')
+          }
+        }
         
-        // Wait a bit longer for session to be established, then redirect
+        // Wait for session to be established, then redirect
         setTimeout(async () => {
           console.log('Executing redirect to /app')
+          
+          // Verify the session is working before redirect
+          const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
+          console.log('Current user before redirect:', currentUser)
+          console.log('User error before redirect:', userError)
           
           // Use the environment variable for the base URL
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
@@ -89,7 +106,7 @@ function VerifyOTPForm() {
             // Fallback to router
             router.push('/app')
           }
-        }, 2000)
+        }, 3000) // Increased wait time
       }
     } catch (err) {
       console.error('OTP verification error:', err)

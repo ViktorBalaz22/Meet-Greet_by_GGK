@@ -68,26 +68,13 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Verify the session is working
-        const { data: { user: currentUser }, error: userError } = await supabase.auth.getUser()
-        console.log('Current user after verification:', currentUser)
-        console.log('User error:', userError)
-        
-        if (currentUser) {
-          console.log('User is authenticated, redirecting...')
-          // Use a more direct approach
-          setTimeout(() => {
-            console.log('Redirecting to /app')
-            window.location.replace('/app')
-          }, 1000)
-        } else {
-          console.error('User not authenticated after OTP verification')
-          // Try redirect anyway as fallback
-          console.log('Attempting redirect anyway as fallback...')
-          setTimeout(() => {
-            window.location.replace('/app')
-          }, 2000)
-        }
+        // Redirect immediately after successful verification
+        // Don't check user status as it may cause session errors
+        console.log('Redirecting to /app after successful OTP verification')
+        setTimeout(() => {
+          console.log('Executing redirect to /app')
+          window.location.replace('/app')
+        }, 1000)
       }
     } catch (err) {
       console.error('OTP verification error:', err)

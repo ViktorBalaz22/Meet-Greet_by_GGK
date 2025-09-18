@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
 export default function AuthCallbackPage() {
   const router = useRouter()
@@ -11,11 +12,42 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
-        console.log('Auth callback page loaded - redirecting to login')
+        console.log('Auth callback page loaded')
+        console.log('Current URL:', window.location.href)
         
-        // Since we're using OTP authentication, this callback is mainly for fallback
-        // Redirect users to the login page where they can start the OTP flow
-        router.push('/login')
+        // Get tokens from URL parameters
+        const urlParams = new URLSearchParams(window.location.search)
+        const accessToken = urlParams.get('access_token')
+        const refreshToken = urlParams.get('refresh_token')
+        const type = urlParams.get('type')
+        
+        console.log('URL params:', { accessToken: !!accessToken, refreshToken: !!refreshToken, type })
+        
+        if (accessToken && refreshToken) {
+          console.log('Setting session from URL parameters...')
+          const { data, error: sessionError } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken,
+          })
+          
+          if (sessionError) {
+            console.error('Error setting session:', sessionError)
+            setError('Failed to authenticate: ' + sessionError.message)
+            return
+          }
+          
+          console.log('Session set successfully:', data)
+          
+          // Wait a moment for session to be established
+          await new Promise(resolve => setTimeout(resolve, 1000))
+          
+          // Redirect to app
+          console.log('Redirecting to /app')
+          router.push('/app')
+        } else {
+          console.log('No tokens found, redirecting to login')
+          router.push('/login')
+        }
         
       } catch (err) {
         console.error('Auth callback error:', err)

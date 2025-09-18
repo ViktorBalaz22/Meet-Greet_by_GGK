@@ -68,29 +68,17 @@ function VerifyOTPForm() {
         // Show success message
         setMessage('Overenie úspešné! Presmerovávam...')
         
-        // Use the same approach as the working magic link: set session explicitly
+        // Store session data in URL parameters and redirect to callback (like magic link)
         if (data.session) {
-          console.log('Setting session explicitly like magic link approach...')
-          const { error: sessionError } = await supabase.auth.setSession({
-            access_token: data.session.access_token,
-            refresh_token: data.session.refresh_token,
-          })
-          
-          if (sessionError) {
-            console.error('Error setting session:', sessionError)
-            setMessage('Chyba pri nastavení relácie: ' + sessionError.message)
-            return
-          }
-          
-          console.log('Session set successfully, redirecting...')
-          // Wait a moment for session to be established
-          await new Promise(resolve => setTimeout(resolve, 1000))
-          
-          // Redirect to app
+          console.log('Storing session in URL and redirecting to callback...')
           const baseUrl = process.env.NEXT_PUBLIC_APP_URL || window.location.origin
-          const targetUrl = `${baseUrl}/app`
-          console.log('Redirecting to:', targetUrl)
-          window.location.href = targetUrl
+          const callbackUrl = new URL('/auth/callback', baseUrl)
+          callbackUrl.searchParams.set('access_token', data.session.access_token)
+          callbackUrl.searchParams.set('refresh_token', data.session.refresh_token)
+          callbackUrl.searchParams.set('type', 'otp')
+          
+          console.log('Redirecting to callback:', callbackUrl.toString())
+          window.location.href = callbackUrl.toString()
         } else {
           console.error('No session data in OTP response')
           setMessage('Chyba: Žiadne údaje o relácii')

@@ -32,23 +32,31 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     // Get initial user only if there's a session
     const getUser = async () => {
       try {
+        console.log('SupabaseContext: Getting initial session...')
         // First check if there's a session without calling getUser
         const { data: { session } } = await supabase.auth.getSession()
+        console.log('SupabaseContext: Session check result:', { hasSession: !!session, hasUser: !!session?.user })
+        
         if (session?.user) {
+          console.log('SupabaseContext: Session found, getting user details...')
           const { data: { user }, error } = await supabase.auth.getUser()
           if (error) {
-            console.error('Error getting user:', error)
+            console.error('SupabaseContext: Error getting user:', error)
           } else if (user) {
+            console.log('SupabaseContext: User loaded successfully:', { id: user.id, email: user.email })
             setUser({
               id: user.id,
               email: user.email!,
               created_at: user.created_at
             })
           }
+        } else {
+          console.log('SupabaseContext: No session found')
         }
       } catch (error) {
-        console.error('Error in getUser:', error)
+        console.error('SupabaseContext: Error in getUser:', error)
       } finally {
+        console.log('SupabaseContext: Setting loading to false')
         setLoading(false)
       }
     }

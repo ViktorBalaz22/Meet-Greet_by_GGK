@@ -17,7 +17,23 @@ export default function ProfileEditPage() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!supabase || !user) {
+      console.log('Profile edit page - Auth state:', { supabase: !!supabase, user: !!user, authLoading })
+      
+      if (!supabase) {
+        console.log('No supabase client, redirecting to login')
+        router.push('/login')
+        setLoading(false)
+        return
+      }
+
+      // Wait for auth to load before checking user
+      if (authLoading) {
+        return
+      }
+
+      if (!user) {
+        console.log('No user found, redirecting to login')
+        router.push('/login')
         setLoading(false)
         return
       }
@@ -42,7 +58,7 @@ export default function ProfileEditPage() {
     }
 
     fetchProfile()
-  }, [supabase, user])
+  }, [supabase, user, authLoading, router])
 
   const handleDeleteProfile = async () => {
     if (!user?.email) {
@@ -93,9 +109,8 @@ export default function ProfileEditPage() {
     )
   }
 
-  if (!user) {
-    router.push('/login')
-    return null
+  if (!user && !authLoading) {
+    return null // Will redirect in useEffect
   }
 
   return (

@@ -9,8 +9,10 @@ export async function middleware(request: NextRequest) {
       },
     })
 
-    // Skip auth check for auth callback and OTP verification to prevent server-side errors
-    if (request.nextUrl.pathname === '/auth/callback' || request.nextUrl.pathname === '/verify-otp') {
+    // Skip auth check for auth callback, OTP verification, and app page to prevent server-side errors
+    if (request.nextUrl.pathname === '/auth/callback' || 
+        request.nextUrl.pathname === '/verify-otp' ||
+        request.nextUrl.pathname === '/app') {
       return response
     }
 

@@ -17,6 +17,8 @@ export default function AppPage() {
   useEffect(() => {
     const fetchProfile = async () => {
       if (!supabase || !user) {
+        console.log('No user found, redirecting to login')
+        router.push('/login')
         setLoading(false)
         return
       }

@@ -19,8 +19,21 @@ export default function AppPage() {
     const fetchProfile = async () => {
       console.log('App page - Auth state:', { supabase: !!supabase, user: !!user, authLoading })
       
-      if (!supabase || !user) {
-        console.log('No user found, redirecting to login')
+      if (!supabase) {
+        console.log('No supabase client, redirecting to login')
+        router.push('/login')
+        setLoading(false)
+        return
+      }
+
+      // Wait for auth to load before checking user
+      if (authLoading) {
+        console.log('Auth still loading, waiting...')
+        return
+      }
+
+      if (!user) {
+        console.log('No user found after auth loaded, redirecting to login')
         router.push('/login')
         setLoading(false)
         return
@@ -47,7 +60,7 @@ export default function AppPage() {
     }
 
     fetchProfile()
-  }, [supabase, user, refreshKey])
+  }, [supabase, user, authLoading, refreshKey, router])
 
   const handleProfileSaved = () => {
     console.log('Profile saved, refreshing...')
@@ -65,9 +78,8 @@ export default function AppPage() {
     )
   }
 
-  if (!user) {
-    router.push('/login')
-    return null
+  if (!user && !authLoading) {
+    return null // Will redirect in useEffect
   }
 
   // If user doesn't have a complete profile, show the form

@@ -13,7 +13,11 @@ const createSupabaseClient = () => {
     auth: {
       autoRefreshToken: true,
       persistSession: true,
-      detectSessionInUrl: true
+      detectSessionInUrl: true,
+      // Ensure session persists across page refreshes
+      storage: typeof window !== 'undefined' ? window.localStorage : undefined,
+      // Set longer session duration (8 hours = 28800 seconds)
+      flowType: 'pkce'
     }
   })
 }

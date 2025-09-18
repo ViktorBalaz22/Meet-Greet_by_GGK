@@ -33,15 +33,29 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     const getUser = async () => {
       try {
         console.log('SupabaseContext: Getting initial session...')
+        
         // First check if there's a session without calling getUser
-        const { data: { session } } = await supabase.auth.getSession()
-        console.log('SupabaseContext: Session check result:', { hasSession: !!session, hasUser: !!session?.user })
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+        console.log('SupabaseContext: Session check result:', { 
+          hasSession: !!session, 
+          hasUser: !!session?.user,
+          sessionError: sessionError?.message 
+        })
         
         if (session?.user) {
           console.log('SupabaseContext: Session found, getting user details...')
           const { data: { user }, error } = await supabase.auth.getUser()
           if (error) {
             console.error('SupabaseContext: Error getting user:', error)
+            // If getUser fails but we have a session, try to use session user
+            if (session.user) {
+              console.log('SupabaseContext: Using session user as fallback')
+              setUser({
+                id: session.user.id,
+                email: session.user.email!,
+                created_at: session.user.created_at
+              })
+            }
           } else if (user) {
             console.log('SupabaseContext: User loaded successfully:', { id: user.id, email: user.email })
             setUser({
@@ -52,6 +66,19 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
           }
         } else {
           console.log('SupabaseContext: No session found')
+          // Try to refresh the session in case tokens are stored but not active
+          console.log('SupabaseContext: Attempting to refresh session...')
+          const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession()
+          if (refreshError) {
+            console.log('SupabaseContext: Refresh failed:', refreshError.message)
+          } else if (refreshData.session?.user) {
+            console.log('SupabaseContext: Session refreshed successfully')
+            setUser({
+              id: refreshData.session.user.id,
+              email: refreshData.session.user.email!,
+              created_at: refreshData.session.user.created_at
+            })
+          }
         }
       } catch (error) {
         console.error('SupabaseContext: Error in getUser:', error)
@@ -66,13 +93,17 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('SupabaseContext: Auth state change:', { event, hasSession: !!session, hasUser: !!session?.user })
+        
         if (session?.user) {
+          console.log('SupabaseContext: Setting user from auth state change:', { id: session.user.id, email: session.user.email })
           setUser({
             id: session.user.id,
             email: session.user.email!,
             created_at: session.user.created_at
           })
         } else {
+          console.log('SupabaseContext: Clearing user from auth state change')
           setUser(null)
         }
         setLoading(false)

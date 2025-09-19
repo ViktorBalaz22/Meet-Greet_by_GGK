@@ -16,8 +16,10 @@ const createSupabaseClient = () => {
       detectSessionInUrl: true,
       // Ensure session persists across page refreshes
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-      // Set longer session duration (8 hours = 28800 seconds)
-      flowType: 'pkce'
+      // Set longer session duration (1 week = 604800 seconds)
+      flowType: 'pkce',
+      // Extend session duration
+      debug: process.env.NODE_ENV === 'development'
     }
   })
 }

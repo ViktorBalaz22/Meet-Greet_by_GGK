@@ -71,6 +71,24 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
           const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession()
           if (refreshError) {
             console.log('SupabaseContext: Refresh failed:', refreshError.message)
+            // Try to restore from localStorage as last resort
+            const storedSession = localStorage.getItem('sb-houxspywdwtxmsfqekvp-auth-token')
+            if (storedSession) {
+              console.log('SupabaseContext: Attempting to restore from localStorage')
+              try {
+                const parsedSession = JSON.parse(storedSession)
+                if (parsedSession?.currentSession?.user) {
+                  console.log('SupabaseContext: Restored session from localStorage')
+                  setUser({
+                    id: parsedSession.currentSession.user.id,
+                    email: parsedSession.currentSession.user.email!,
+                    created_at: parsedSession.currentSession.user.created_at
+                  })
+                }
+              } catch (e) {
+                console.log('SupabaseContext: Failed to parse stored session')
+              }
+            }
           } else if (refreshData.session?.user) {
             console.log('SupabaseContext: Session refreshed successfully')
             setUser({
@@ -110,8 +128,22 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       }
     )
 
+    // Set up periodic session refresh to keep session alive
+    const refreshInterval = setInterval(async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession()
+        if (session) {
+          console.log('SupabaseContext: Refreshing session to keep it alive')
+          await supabase.auth.refreshSession()
+        }
+      } catch (error) {
+        console.error('SupabaseContext: Error refreshing session:', error)
+      }
+    }, 30 * 60 * 1000) // Refresh every 30 minutes
+
     return () => {
       subscription.unsubscribe()
+      clearInterval(refreshInterval)
     }
   }, [])
 

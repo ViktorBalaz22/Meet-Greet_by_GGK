@@ -37,9 +37,10 @@ export async function POST(request: NextRequest) {
       }
     )
 
-    // Generate unique filename
-    const fileExt = file.name.split('.').pop()
-    const fileName = `${userId}-${Date.now()}.${fileExt}`
+    // Generate unique filename with proper extension
+    const fileExt = file.name.split('.').pop()?.toLowerCase()
+    const validExt = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(fileExt || '') ? fileExt : 'jpg'
+    const fileName = `${userId}-${Date.now()}.${validExt}`
     const filePath = `profiles/${fileName}`
 
     // Upload file to Supabase Storage

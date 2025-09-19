@@ -17,12 +17,33 @@ export default function AttendeeCard({ profile }: AttendeeCardProps) {
   useEffect(() => {
     if (supabase && profile.photo_path) {
       console.log('AttendeeCard: Getting photo URL for path:', profile.photo_path)
+      
+      // Check if the path looks valid
+      if (profile.photo_path.includes('.blob')) {
+        console.warn('AttendeeCard: Warning - photo path contains .blob extension:', profile.photo_path)
+      }
+      
       const { data } = supabase.storage
         .from('photos')
         .getPublicUrl(profile.photo_path)
       
       console.log('AttendeeCard: Generated photo URL:', data.publicUrl)
-      setPhotoUrl(data.publicUrl)
+      
+      // Test if the URL is accessible
+      fetch(data.publicUrl, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            console.log('AttendeeCard: Photo URL is accessible')
+            setPhotoUrl(data.publicUrl)
+          } else {
+            console.error('AttendeeCard: Photo URL returned status:', response.status)
+            setPhotoUrl(null)
+          }
+        })
+        .catch(error => {
+          console.error('AttendeeCard: Error testing photo URL:', error)
+          setPhotoUrl(null)
+        })
     } else {
       console.log('AttendeeCard: No photo path or supabase client:', { 
         hasSupabase: !!supabase, 

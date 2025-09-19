@@ -87,13 +87,24 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
           initialQuality: 0.8
         })
 
+        // Ensure the compressed file has the correct name and type
+        // Extract original extension or default to jpg
+        const originalExt = file.name.split('.').pop()?.toLowerCase()
+        const validExt = ['jpg', 'jpeg', 'png', 'webp', 'gif'].includes(originalExt || '') ? originalExt : 'jpg'
+        const correctedFileName = file.name.replace(/\.[^/.]+$/, '') + '.' + validExt
+        
+        const correctedFile = new File([compressedFile], correctedFileName, {
+          type: 'image/jpeg',
+          lastModified: Date.now()
+        })
+
         console.log('Image compressed:', {
           originalSize: (file.size / 1024 / 1024).toFixed(2) + 'MB',
           compressedSize: (compressedFile.size / 1024 / 1024).toFixed(2) + 'MB',
           compressionRatio: ((1 - compressedFile.size / file.size) * 100).toFixed(1) + '%'
         })
 
-        setPhotoFile(compressedFile)
+        setPhotoFile(correctedFile)
         
         // Create preview
         const reader = new FileReader()

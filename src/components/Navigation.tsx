@@ -73,7 +73,7 @@ export default function Navigation() {
                   className="w-6 h-6"
                 />
               </div>
-              <span className="text-xl text-gray-900" style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}>Meet&Greet</span>
+              <span className="text-xl text-gray-900 font-bold">Meet&Greet</span>
             </Link>
           </div>
           
@@ -82,8 +82,7 @@ export default function Navigation() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/profile/edit"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-bold"
                 >
                   Môj profil
                 </Link>
@@ -99,8 +98,7 @@ export default function Navigation() {
                 
                 <button
                   onClick={handleLogout}
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-                  style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
+                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-bold"
                 >
                   Odhlásiť sa
                 </button>

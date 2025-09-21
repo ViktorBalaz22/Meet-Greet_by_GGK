@@ -51,10 +51,10 @@ export default function Home() {
             {/* Meet&Greet by MullenLowe GGK */}
             <div className="flex justify-center mb-2">
               <div className="text-center">
-                <h1 className="text-4xl md:text-5xl text-gray-900 mb-1" style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}>
+                <h1 className="text-4xl md:text-5xl text-gray-900 mb-1 font-bold">
                   Meet&Greet
                 </h1>
-                <p className="text-sm text-gray-500" style={{ fontFamily: 'Wolpe Pegasus Regular, sans-serif' }}>
+                <p className="text-sm text-gray-500 font-normal">
                   by MullenLowe GGK
                 </p>
               </div>

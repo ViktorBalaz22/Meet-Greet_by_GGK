@@ -151,7 +151,6 @@ END:VCARD`
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-sm text-gray-600 hover:text-gray-900 font-bold transition-colors duration-200"
-                  style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
                 >
                   LinkedIn profil
                 </a>

@@ -35,3 +35,4 @@ CREATE POLICY "Admins can update any profile" ON profiles
       WHERE id = auth.uid() AND is_admin = true
     )
   );
+

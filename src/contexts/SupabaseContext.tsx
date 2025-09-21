@@ -139,7 +139,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         console.error('SupabaseContext: Error refreshing session:', error)
       }
-    }, 30 * 60 * 1000) // Refresh every 30 minutes
+    }, 6 * 60 * 60 * 1000) // Refresh every 6 hours for 1-week session
 
     return () => {
       subscription.unsubscribe()

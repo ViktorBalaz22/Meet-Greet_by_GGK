@@ -29,9 +29,9 @@ export async function POST(request: NextRequest) {
       refresh_token,
     })
 
-    // Set longer session duration for evening events
+    // Set session duration to 1 week for visitor comfort
     const expiresAt = new Date()
-    expiresAt.setHours(expiresAt.getHours() + 8) // 8 hours for evening event
+    expiresAt.setDate(expiresAt.getDate() + 7) // 1 week (7 days) for visitor comfort
 
     if (error) {
       console.error('Error setting session server-side:', error)

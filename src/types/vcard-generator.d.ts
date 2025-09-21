@@ -15,3 +15,4 @@ declare module 'vcard-generator' {
   export = vCardGenerator
 }
 
+

@@ -62,7 +62,7 @@ function LoginForm() {
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Prihlásenie
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-bold">
             Zadajte svoj e-mail a pošleme vám 6-miestny overovací kód
           </p>
         </div>
@@ -88,7 +88,10 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            style={{
+              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+            }}
           >
             {loading ? 'Odosielam...' : 'Pošli overovací kód'}
           </button>
@@ -107,7 +110,7 @@ function LoginForm() {
         <div className="text-center">
           <Link 
             href="/" 
-            className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+            className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
           >
             ← Späť na úvodnú stránku
           </Link>

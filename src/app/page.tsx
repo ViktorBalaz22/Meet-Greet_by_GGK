@@ -32,7 +32,7 @@ export default function Home() {
           <div className="mb-12 pt-15">
             <div className="relative inline-block">
               <div
-                className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center animate-pulse"
+                className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
                 style={{
                   background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
                 }}
@@ -46,7 +46,6 @@ export default function Home() {
                   priority
                 />
               </div>
-              <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full animate-bounce"></div>
             </div>
 
             {/* Replace h1 with HDL.svg */}

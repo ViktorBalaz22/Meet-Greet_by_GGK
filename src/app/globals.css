@@ -67,6 +67,70 @@ input, textarea, select {
   font-weight: 400;
 }
 
+/* Mobile-specific input optimizations */
+@media (max-width: 768px) {
+  input, textarea, select {
+    /* Force hardware acceleration */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform;
+    
+    /* Optimize rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    
+    /* Reduce repaints */
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    
+    /* Optimize text rendering */
+    text-rendering: optimizeSpeed;
+    -webkit-text-size-adjust: 100%;
+    
+    /* Prevent zoom on focus (iOS) */
+    font-size: 16px !important;
+    
+    /* Optimize touch events */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Reduce input lag */
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  
+  /* Specific optimizations for text inputs */
+  input[type="text"], 
+  input[type="email"], 
+  input[type="password"], 
+  input[type="tel"],
+  textarea {
+    /* Force immediate rendering */
+    contain: layout style paint;
+    
+    /* Optimize for mobile keyboards */
+    -webkit-user-select: text;
+    user-select: text;
+    
+    /* Prevent input delay */
+    -webkit-touch-callout: none;
+    
+    /* Optimize scrolling */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Focus optimizations */
+  input:focus, textarea:focus, select:focus {
+    /* Reduce focus delay */
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Force immediate repaint */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+  }
+}
+
 /* Critical CSS for main page performance */
 .main-page-container {
   contain: layout style paint;
@@ -92,4 +156,41 @@ img[loading="eager"] {
 .image-container {
   aspect-ratio: 1;
   overflow: hidden;
+}
+
+/* Additional mobile input performance optimizations */
+@media (max-width: 768px) {
+  /* Optimize form containers */
+  form {
+    contain: layout style;
+  }
+  
+  /* Optimize input containers */
+  .input-container, .form-group {
+    contain: layout style paint;
+    will-change: transform;
+  }
+  
+  /* Reduce input field repaints */
+  input, textarea {
+    /* Force composite layer */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    
+    /* Optimize for mobile typing */
+    -webkit-user-modify: read-write-plaintext-only;
+    
+    /* Prevent input lag on Android */
+    -webkit-touch-callout: none;
+    -webkit-user-select: text;
+    user-select: text;
+  }
+  
+  /* Optimize placeholder text */
+  input::placeholder, textarea::placeholder {
+    /* Use system font for placeholders too */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    font-weight: 400;
+    opacity: 0.6;
+  }
 }

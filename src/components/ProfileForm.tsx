@@ -1,10 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
+import { useOptimizedInput } from '@/hooks/useOptimizedInput'
 
 interface ProfileFormProps {
   profile?: Profile | null
@@ -82,13 +83,13 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
     }
   }, [profile])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     }))
-  }
+  }, [])
 
   const handlePhotoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -264,8 +265,15 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             value={formData.first_name}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
-            style={{ borderColor: '#232323' }}
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900 input-container"
+            style={{ 
+              borderColor: '#232323',
+              fontSize: '16px', // Prevent zoom on iOS
+              WebkitAppearance: 'none',
+              appearance: 'none'
+            }}
+            autoComplete="given-name"
+            autoCapitalize="words"
           />
         </div>
 
@@ -280,8 +288,15 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             value={formData.last_name}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
-            style={{ borderColor: '#232323' }}
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900 input-container"
+            style={{ 
+              borderColor: '#232323',
+              fontSize: '16px',
+              WebkitAppearance: 'none',
+              appearance: 'none'
+            }}
+            autoComplete="family-name"
+            autoCapitalize="words"
           />
         </div>
 

@@ -426,7 +426,12 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             checked={formData.agreed_gdpr}
             onChange={handleInputChange}
             className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded"
-            style={{ accentColor: '#232323' }}
+            style={{ 
+              accentColor: '#232323',
+              display: 'block',
+              visibility: 'visible',
+              opacity: '1'
+            }}
           />
         </div>
         <div className="ml-3 text-sm">

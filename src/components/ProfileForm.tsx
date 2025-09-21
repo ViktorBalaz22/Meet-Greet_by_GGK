@@ -416,6 +416,7 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
         </div>
       </div>
 
+      {/* GDPR Checkbox - FORCE DEPLOYMENT */}
       <div className="flex items-start">
         <div className="flex items-center h-5">
           <input

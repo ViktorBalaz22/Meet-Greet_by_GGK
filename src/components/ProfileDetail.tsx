@@ -161,7 +161,7 @@ END:VCARD`
             </div>
           </div>
 
-          {/* Action Buttons - Moved to bottom of card */}
+          {/* Action Buttons - Moved to bottom of card - FORCE DEPLOYMENT */}
           <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start w-full">
               <button

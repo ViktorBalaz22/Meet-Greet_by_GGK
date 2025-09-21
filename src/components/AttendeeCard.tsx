@@ -91,6 +91,8 @@ END:VCARD`
               className="h-16 w-16 rounded-full object-cover"
               src={photoUrl}
               alt={`${profile.first_name || ''} ${profile.last_name || ''}`.trim()}
+              loading="lazy"
+              decoding="async"
               onError={(e) => {
                 console.error('AttendeeCard: Image failed to load:', photoUrl)
                 console.error('AttendeeCard: Error event:', e)

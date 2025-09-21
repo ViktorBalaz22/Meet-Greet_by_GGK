@@ -25,6 +25,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="sk">
+      <head>
+        <link
+          rel="preload"
+          href="/fonts/WolpePegasus-Regular.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/WolpePegasus-Bold.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

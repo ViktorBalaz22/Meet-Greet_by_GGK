@@ -44,6 +44,8 @@ export default function Home() {
                   height={96}
                   className="w-15 h-20"
                   priority
+                  loading="eager"
+                  quality={90}
                 />
               </div>
             </div>

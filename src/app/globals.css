@@ -57,6 +57,12 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: 'Wolpe Pegasus', sans-serif;
+  font-family: 'Wolpe Pegasus', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  font-weight: 400;
+}
+
+/* Optimize input performance with system fonts */
+input, textarea, select {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
   font-weight: 400;
 }

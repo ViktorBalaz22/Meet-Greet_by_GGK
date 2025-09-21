@@ -82,7 +82,7 @@ export default function Navigation() {
               <div className="flex items-center space-x-4">
                 <Link
                   href="/profile/edit"
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-bold"
+                  className="text-gray-700 hover:text-gray-900 px-2 py-2 rounded-md text-sm font-bold whitespace-nowrap"
                 >
                   Môj profil
                 </Link>
@@ -98,7 +98,7 @@ export default function Navigation() {
                 
                 <button
                   onClick={handleLogout}
-                  className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-bold"
+                  className="text-gray-700 hover:text-gray-900 px-2 py-2 rounded-md text-sm font-bold whitespace-nowrap"
                 >
                   Odhlásiť sa
                 </button>

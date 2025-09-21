@@ -390,7 +390,13 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
           </div>
           {photoPreview && (
             <div className="w-16 h-16 rounded-lg overflow-hidden">
-              <img src={photoPreview} alt="Preview" className="w-full h-full object-cover" />
+              <img 
+                src={photoPreview} 
+                alt="Preview" 
+                className="w-full h-full object-cover" 
+                loading="lazy"
+                decoding="async"
+              />
             </div>
           )}
         </div>

@@ -85,7 +85,7 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
                     created_at: parsedSession.currentSession.user.created_at
                   })
                 }
-              } catch (e) {
+              } catch {
                 console.log('SupabaseContext: Failed to parse stored session')
               }
             }

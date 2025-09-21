@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useCallback } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -119,10 +119,10 @@ function VerifyOTPForm() {
     }
   }
 
-  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOtpChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6) // Only digits, max 6
     setOtp(value)
-  }
+  }, [])
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
@@ -185,10 +185,23 @@ function VerifyOTPForm() {
               required
               value={otp}
               onChange={handleOtpChange}
-              className="w-full px-4 py-3 text-center text-2xl font-mono border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900 tracking-widest"
-              style={{ borderColor: '#232323' }}
+              className="w-full px-4 py-3 text-center text-xl md:text-2xl font-mono border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900 tracking-widest input-container"
+              style={{ 
+                borderColor: '#232323',
+                fontSize: '20px', // Prevent zoom on iOS, smaller on mobile
+                WebkitAppearance: 'none',
+                appearance: 'none',
+                transform: 'translateZ(0)',
+                willChange: 'transform',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale',
+                textRendering: 'optimizeSpeed',
+                backfaceVisibility: 'hidden',
+                WebkitBackfaceVisibility: 'hidden'
+              }}
               placeholder="123456"
               maxLength={6}
+              autoFocus
             />
           </div>
 

@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
 import imageCompression from 'browser-image-compression'
-import { useOptimizedInput } from '@/hooks/useOptimizedInput'
 
 interface ProfileFormProps {
   profile?: Profile | null

@@ -193,4 +193,39 @@ img[loading="eager"] {
     font-weight: 400;
     opacity: 0.6;
   }
+  
+  /* OTP-specific optimizations */
+  input[inputmode="numeric"] {
+    /* Optimize numeric input rendering */
+    font-variant-numeric: tabular-nums;
+    -webkit-font-feature-settings: "tnum";
+    font-feature-settings: "tnum";
+    
+    /* Reduce character spacing complexity */
+    letter-spacing: 0.1em;
+    
+    /* Optimize for mobile keyboards */
+    -webkit-user-select: text;
+    user-select: text;
+    
+    /* Prevent input delay on mobile */
+    -webkit-touch-callout: none;
+    
+    /* Force immediate rendering */
+    contain: layout style paint;
+  }
+  
+  /* OTP input focus optimizations */
+  input[inputmode="numeric"]:focus {
+    /* Immediate hardware acceleration on focus */
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    
+    /* Optimize text rendering during typing */
+    text-rendering: optimizeSpeed;
+    
+    /* Reduce focus delay */
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+  }
 }

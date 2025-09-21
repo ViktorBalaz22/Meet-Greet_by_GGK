@@ -6,7 +6,7 @@ import { useCallback, useRef, useState } from 'react'
  */
 export function useOptimizedInput(initialValue: string = '') {
   const [value, setValue] = useState(initialValue)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null)
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

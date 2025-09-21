@@ -3,11 +3,11 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
+    <div className="min-h-screen bg-white relative overflow-hidden main-page-container">
       {/* Desktop background image */}
       <div
         aria-hidden="true"
-        className="hidden md:block pointer-events-none select-none absolute inset-0 z-[0]"
+        className="hidden md:block pointer-events-none select-none absolute inset-0 z-[0] main-page-bg"
         style={{
           backgroundImage: "url('/bg.png')",
           backgroundSize: "cover",
@@ -18,7 +18,7 @@ export default function Home() {
       {/* Mobile background image */}
       <div
         aria-hidden="true"
-        className="block md:hidden pointer-events-none select-none absolute inset-0 z-[0]"
+        className="block md:hidden pointer-events-none select-none absolute inset-0 z-[0] main-page-bg"
         style={{
           backgroundImage: "url('/mobile-bg.png')",
           backgroundSize: "cover",
@@ -30,9 +30,9 @@ export default function Home() {
         <main className="text-center max-w-2xl mx-auto w-full flex flex-col items-center justify-center">
           {/* Animated Logo */}
           <div className="mb-12 pt-15">
-            <div className="relative inline-block">
+            <div className="relative inline-block main-page-logo">
               <div
-                className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center"
+                className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center image-container"
                 style={{
                   background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
                 }}
@@ -45,7 +45,10 @@ export default function Home() {
                   className="w-15 h-20"
                   priority
                   loading="eager"
-                  quality={90}
+                  quality={95}
+                  sizes="96px"
+                  placeholder="blur"
+                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                 />
               </div>
             </div>
@@ -99,11 +102,14 @@ export default function Home() {
               <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-3" style={{ background: "#ffffffff" }}>
                 <Image
                   src="/1-Black.png"
-                  alt="ML White Icon"
+                  alt="Create Profile Icon"
                   width={24}
                   height={24}
                   className="w-18 h-10"
                   priority
+                  quality={90}
+                  sizes="24px"
+                  loading="eager"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">
@@ -121,11 +127,14 @@ export default function Home() {
               <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-3" style={{ background: "#ffffffff" }}>
                 <Image
                   src="/2-Black.png"
-                  alt="ML White Icon"
+                  alt="Search Participants Icon"
                   width={24}
                   height={24}
                   className="w-18 h-10"
                   priority
+                  quality={90}
+                  sizes="24px"
+                  loading="eager"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">
@@ -143,11 +152,14 @@ export default function Home() {
               <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-3" style={{ background: "#ffffffff" }}>
                 <Image
                   src="/3-Black.png"
-                  alt="ML White Icon"
+                  alt="Share Contacts Icon"
                   width={24}
                   height={24}
                   className="w-18 h-10"
                   priority
+                  quality={90}
+                  sizes="24px"
+                  loading="eager"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">

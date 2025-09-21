@@ -40,6 +40,43 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
+        {/* Preload critical images for main page */}
+        <link
+          rel="preload"
+          href="/Octopus-icon.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/bg.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/mobile-bg.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/1-Black.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/2-Black.png"
+          as="image"
+          type="image/png"
+        />
+        <link
+          rel="preload"
+          href="/3-Black.png"
+          as="image"
+          type="image/png"
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

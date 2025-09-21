@@ -73,7 +73,7 @@ export default function Navigation() {
                   className="w-6 h-6"
                 />
               </div>
-              <span className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Bold Wolpe, sans-serif' }}>Meet & Greet</span>
+              <span className="text-xl text-gray-900" style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}>Meet&Greet</span>
             </Link>
           </div>
           
@@ -83,8 +83,9 @@ export default function Navigation() {
                 <Link
                   href="/profile/edit"
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
                 >
-                  ✏️ Môj profil
+                  Môj profil
                 </Link>
                 
                 {profile.is_admin && (
@@ -99,6 +100,7 @@ export default function Navigation() {
                 <button
                   onClick={handleLogout}
                   className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                  style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
                 >
                   Odhlásiť sa
                 </button>

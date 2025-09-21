@@ -338,12 +338,24 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
         </label>
         <div className="flex items-center space-x-4">
           <div className="flex-1">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePhotoChange}
-              className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            />
+            <div className="relative">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handlePhotoChange}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                id="photo-upload"
+              />
+              <label
+                htmlFor="photo-upload"
+                className="inline-flex items-center px-4 py-2 text-white font-semibold rounded-lg cursor-pointer transition-opacity duration-200 hover:opacity-90"
+                style={{
+                  background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+                }}
+              >
+                Vybrať súbor
+              </label>
+            </div>
             <p className="text-xs text-gray-500 mt-1">PNG, JPG, WebP do 2MB</p>
           </div>
           {photoPreview && (
@@ -363,7 +375,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             checked={formData.agreed_gdpr}
             onChange={handleInputChange}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            className="h-4 w-4 text-gray-900 focus:ring-gray-500 border-gray-300 rounded"
+            style={{ accentColor: '#232323' }}
           />
         </div>
         <div className="ml-3 text-sm">

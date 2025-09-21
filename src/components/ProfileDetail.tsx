@@ -64,7 +64,9 @@ END:VCARD`
     <>
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-8">
+        <div className="px-6 py-8" style={{
+          background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+        }}>
           <div className="flex items-center justify-between">
             <Link
               href="/app"
@@ -74,7 +76,7 @@ END:VCARD`
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
             </Link>
-            <h1 className="text-2xl font-bold text-white" style={{ color: '#232323' }}>Profil účastníka</h1>
+            <h1 className="text-2xl font-bold text-white">Profil účastníka</h1>
             <div className="w-6"></div>
           </div>
         </div>
@@ -142,7 +144,7 @@ END:VCARD`
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-gray-600 hover:text-gray-900 font-bold transition-colors duration-200"
-                      style={{ fontFamily: 'Bold Wolpe, sans-serif' }}
+                      style={{ fontFamily: 'Wolpe Pegasus Bold, sans-serif' }}
                     >
                       LinkedIn profil
                     </a>

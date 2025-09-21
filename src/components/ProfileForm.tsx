@@ -31,6 +31,41 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
   const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
+  // Get photo URL from Supabase Storage
+  useEffect(() => {
+    if (supabase && profile?.photo_path) {
+      console.log('ProfileForm: Getting photo URL for path:', profile.photo_path)
+      
+      const { data } = supabase.storage
+        .from('photos')
+        .getPublicUrl(profile.photo_path)
+      
+      console.log('ProfileForm: Generated photo URL:', data.publicUrl)
+      
+      // Test if the URL is accessible
+      fetch(data.publicUrl, { method: 'HEAD' })
+        .then(response => {
+          if (response.ok) {
+            console.log('ProfileForm: Photo URL is accessible')
+            setPhotoPreview(data.publicUrl)
+          } else {
+            console.error('ProfileForm: Photo URL returned status:', response.status)
+            setPhotoPreview(null)
+          }
+        })
+        .catch(error => {
+          console.error('ProfileForm: Error testing photo URL:', error)
+          setPhotoPreview(null)
+        })
+    } else {
+      console.log('ProfileForm: No photo path or supabase client:', { 
+        hasSupabase: !!supabase, 
+        photoPath: profile?.photo_path 
+      })
+      setPhotoPreview(null)
+    }
+  }, [supabase, profile?.photo_path])
+
   // Update form data when profile prop changes (fixes refresh issue)
   useEffect(() => {
     if (profile) {
@@ -44,11 +79,6 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
         about: profile.about || '',
         agreed_gdpr: profile.agreed_gdpr || false,
       })
-      
-      // Set photo preview if profile has a photo
-      if (profile.photo_path) {
-        setPhotoPreview(profile.photo_path)
-      }
     }
   }, [profile])
 

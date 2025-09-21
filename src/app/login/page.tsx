@@ -50,14 +50,14 @@ function LoginForm() {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <svg 
-              className="w-8 h-8 text-white" 
-              fill="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-            </svg>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
+            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+          }}>
+            <img
+              src="/Octopus-icon.png"
+              alt="Octopus Icon"
+              className="w-10 h-10"
+            />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Prihlásenie
@@ -80,7 +80,8 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900"
+              style={{ borderColor: '#232323' }}
               placeholder="vas@email.sk"
             />
           </div>

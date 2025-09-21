@@ -150,7 +150,8 @@ END:VCARD`
                   href={profile.linkedin_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-blue-600 hover:text-blue-500"
+                  className="text-sm text-gray-600 hover:text-gray-900 font-bold transition-colors duration-200"
+                  style={{ fontFamily: 'Bold Wolpe, sans-serif' }}
                 >
                   LinkedIn profil
                 </a>

@@ -234,7 +234,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             value={formData.first_name}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
 
@@ -249,7 +250,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             value={formData.last_name}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
 
@@ -264,7 +266,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             value={formData.company}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
 
@@ -278,7 +281,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             name="position"
             value={formData.position}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
 
@@ -292,7 +296,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             name="phone"
             value={formData.phone}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
 
@@ -306,7 +311,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             name="linkedin_url"
             value={formData.linkedin_url}
             onChange={handleInputChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+            className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
       </div>
@@ -321,7 +327,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
           rows={3}
           value={formData.about}
           onChange={handleInputChange}
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
+          style={{ borderColor: '#232323' }}
         />
       </div>
 
@@ -379,7 +386,10 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        style={{
+          background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+        }}
       >
         {loading ? 'Ukladám...' : 'Uložiť profil'}
       </button>

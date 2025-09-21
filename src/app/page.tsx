@@ -48,16 +48,16 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Replace h1 with HDL.svg */}
+            {/* Meet&Greet by MullenLowe GGK */}
             <div className="flex justify-center mb-2">
-              <Image
-                src="/HDL.svg"
-                alt="HDL Logo"
-                width={320}
-                height={80}
-                className="mx-auto h-20 w-auto"
-                priority
-              />
+              <div className="text-center">
+                <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-1">
+                  Meet&Greet
+                </h1>
+                <p className="text-sm text-gray-500 font-medium">
+                  by MullenLowe GGK
+                </p>
+              </div>
             </div>
             <p className="text-xl text-gray-600 font-bold">
               Pripojte sa k účastníkom eventu a zdieľajte svoje digitálne vizitky

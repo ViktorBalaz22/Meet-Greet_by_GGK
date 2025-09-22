@@ -84,9 +84,27 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target
+    let processedValue = value
+    
+    // Auto-format LinkedIn URL
+    if (name === 'linkedin_url' && value) {
+      // If it starts with www., add https://
+      if (value.startsWith('www.')) {
+        processedValue = 'https://' + value
+      }
+      // If it starts with linkedin.com, add https://
+      else if (value.startsWith('linkedin.com')) {
+        processedValue = 'https://' + value
+      }
+      // If it doesn't start with http:// or https://, add https://
+      else if (!value.startsWith('http://') && !value.startsWith('https://')) {
+        processedValue = 'https://' + value
+      }
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : processedValue
     }))
   }, [])
 
@@ -350,13 +368,14 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             LinkedIn URL
           </label>
           <input
-            type="url"
+            type="text"
             id="linkedin_url"
             name="linkedin_url"
             value={formData.linkedin_url}
             onChange={handleInputChange}
             className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 text-gray-900"
             style={{ borderColor: '#232323' }}
+            placeholder="www.linkedin.com/in/username"
           />
         </div>
       </div>

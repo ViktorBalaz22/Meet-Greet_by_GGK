@@ -259,4 +259,27 @@ img[loading="eager"] {
     -webkit-user-select: none;
     user-select: none;
   }
+  
+  /* Custom checkbox mobile optimizations */
+  .custom-checkbox-container {
+    /* Ensure proper touch target */
+    min-height: 44px;
+    min-width: 44px;
+    
+    /* Optimize touch events */
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    
+    /* Prevent text selection */
+    -webkit-user-select: none;
+    user-select: none;
+    
+    /* Smooth transitions */
+    transition: all 0.2s ease;
+  }
+  
+  .custom-checkbox-container:active {
+    /* Visual feedback on touch */
+    transform: scale(0.95);
+  }
 }

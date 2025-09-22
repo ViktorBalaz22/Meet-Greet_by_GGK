@@ -416,9 +416,18 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
         </div>
       </div>
 
-      {/* GDPR Checkbox */}
+      {/* GDPR Checkbox - Custom Mobile-Friendly Solution */}
       <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200">
-        <label htmlFor="agreed_gdpr" className="flex items-start cursor-pointer">
+        <div 
+          className="flex items-start cursor-pointer custom-checkbox-container"
+          onClick={() => {
+            setFormData(prev => ({
+              ...prev,
+              agreed_gdpr: !prev.agreed_gdpr
+            }))
+          }}
+        >
+          {/* Hidden input for form validation */}
           <input
             id="agreed_gdpr"
             name="agreed_gdpr"
@@ -426,23 +435,30 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             checked={formData.agreed_gdpr}
             onChange={handleInputChange}
-            className="h-8 w-8 text-gray-900 focus:ring-gray-500 border-2 border-gray-600 rounded mt-1 flex-shrink-0"
-            style={{ 
-              accentColor: '#232323',
-              display: 'block',
-              visibility: 'visible',
-              opacity: '1',
-              backgroundColor: 'white',
-              minWidth: '44px',
-              minHeight: '44px',
-              WebkitAppearance: 'none',
-              appearance: 'none'
-            }}
+            className="sr-only"
+            style={{ display: 'none' }}
           />
+          
+          {/* Custom checkbox visual */}
+          <div 
+            className={`w-8 h-8 border-2 rounded flex items-center justify-center mt-1 flex-shrink-0 ${
+              formData.agreed_gdpr 
+                ? 'bg-gray-900 border-gray-900' 
+                : 'bg-white border-gray-600'
+            }`}
+            style={{ minWidth: '44px', minHeight: '44px' }}
+          >
+            {formData.agreed_gdpr && (
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            )}
+          </div>
+          
           <span className="ml-3 text-sm text-gray-900 font-medium leading-relaxed">
             Súhlasím so spracovaním osobných údajov v súlade s GDPR *
           </span>
-        </label>
+        </div>
       </div>
 
       {message && (

@@ -417,8 +417,8 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
       </div>
 
       {/* GDPR Checkbox */}
-      <div className="flex items-start bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200">
-        <div className="flex items-center h-5">
+      <div className="bg-yellow-50 p-4 rounded-lg border-2 border-yellow-200">
+        <label htmlFor="agreed_gdpr" className="flex items-start cursor-pointer">
           <input
             id="agreed_gdpr"
             name="agreed_gdpr"
@@ -426,21 +426,23 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
             required
             checked={formData.agreed_gdpr}
             onChange={handleInputChange}
-            className="h-6 w-6 text-gray-900 focus:ring-gray-500 border-2 border-gray-600 rounded"
+            className="h-8 w-8 text-gray-900 focus:ring-gray-500 border-2 border-gray-600 rounded mt-1 flex-shrink-0"
             style={{ 
               accentColor: '#232323',
               display: 'block',
               visibility: 'visible',
               opacity: '1',
-              backgroundColor: 'white'
+              backgroundColor: 'white',
+              minWidth: '44px',
+              minHeight: '44px',
+              WebkitAppearance: 'none',
+              appearance: 'none'
             }}
           />
-        </div>
-        <div className="ml-3 text-sm">
-          <label htmlFor="agreed_gdpr" className="text-gray-900 font-medium">
+          <span className="ml-3 text-sm text-gray-900 font-medium leading-relaxed">
             Súhlasím so spracovaním osobných údajov v súlade s GDPR *
-          </label>
-        </div>
+          </span>
+        </label>
       </div>
 
       {message && (

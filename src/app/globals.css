@@ -228,4 +228,35 @@ img[loading="eager"] {
     outline: none;
     -webkit-tap-highlight-color: transparent;
   }
+  
+  /* Mobile checkbox optimizations for iPhone Safari */
+  input[type="checkbox"] {
+    /* Ensure proper touch target size */
+    min-width: 44px;
+    min-height: 44px;
+    
+    /* Remove default styling that can interfere with touch */
+    -webkit-appearance: none;
+    appearance: none;
+    
+    /* Optimize touch events */
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+    
+    /* Ensure proper display */
+    display: block;
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  /* Checkbox label touch optimization */
+  label[for] {
+    /* Ensure entire label area is touchable */
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    
+    /* Prevent text selection on touch */
+    -webkit-user-select: none;
+    user-select: none;
+  }
 }

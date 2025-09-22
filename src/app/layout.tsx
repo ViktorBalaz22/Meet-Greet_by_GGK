@@ -14,8 +14,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Event Business Cards",
+  title: "Meet&Greet by MullenLowe GGK",
   description: "Connect with event participants through digital business cards",
+  icons: {
+    icon: '/Octopus-icon.png',
+    shortcut: '/Octopus-icon.png',
+    apple: '/Octopus-icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -26,6 +31,9 @@ export default function RootLayout({
   return (
     <html lang="sk">
       <head>
+        <link rel="icon" href="/Octopus-icon.png" type="image/png" />
+        <link rel="shortcut icon" href="/Octopus-icon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/Octopus-icon.png" />
         <link
           rel="preload"
           href="/fonts/WolpePegasus-Regular.ttf"

@@ -48,28 +48,6 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
-      {/* Desktop background image */}
-      <div
-        aria-hidden="true"
-        className="hidden md:block pointer-events-none select-none absolute inset-0 z-[0]"
-        style={{
-          backgroundImage: "url('/bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.05,
-        }}
-      />
-      {/* Mobile background image */}
-      <div
-        aria-hidden="true"
-        className="block md:hidden pointer-events-none select-none absolute inset-0 z-[0]"
-        style={{
-          backgroundImage: "url('/mobile-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.05,
-        }}
-      />
       <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{

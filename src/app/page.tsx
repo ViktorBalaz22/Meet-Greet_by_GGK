@@ -4,28 +4,6 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div className="min-h-screen bg-white relative overflow-hidden main-page-container">
-      {/* Desktop background image */}
-      <div
-        aria-hidden="true"
-        className="hidden md:block pointer-events-none select-none absolute inset-0 z-[0] main-page-bg"
-        style={{
-          backgroundImage: "url('/bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.05,
-        }}
-      />
-      {/* Mobile background image */}
-      <div
-        aria-hidden="true"
-        className="block md:hidden pointer-events-none select-none absolute inset-0 z-[0] main-page-bg"
-        style={{
-          backgroundImage: "url('/mobile-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.05,
-        }}
-      />
       <div className="flex flex-col items-center justify-center min-h-screen px-4 md:px-[100px] relative z-10">
         <main className="text-center max-w-2xl mx-auto w-full flex flex-col items-center justify-center">
           {/* Animated Logo */}

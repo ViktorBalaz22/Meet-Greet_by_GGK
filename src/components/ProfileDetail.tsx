@@ -162,7 +162,7 @@ END:VCARD`
           </div>
         </div>
 
-        {/* Action Buttons - Moved to bottom of card - FORCE DEPLOYMENT */}
+        {/* Action Buttons */}
         <div className="px-6 pb-6">
           <div className="mt-6 pt-6 border-t border-gray-200">
             <div className="flex flex-col sm:flex-row gap-3 justify-center md:justify-start w-full">
@@ -176,7 +176,7 @@ END:VCARD`
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                🔥 vCard BUTTON MOVED 🔥
+                Stiahnuť vCard
               </button>
               <button
                 onClick={() => setShowQR(true)}

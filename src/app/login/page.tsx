@@ -40,7 +40,10 @@ function LoginForm() {
       console.log('Captcha enabled:', isCaptchaEnabled)
       console.log('Captcha token present:', !!captchaToken)
       
-      const signInOptions: any = {
+      const signInOptions: {
+        shouldCreateUser: boolean
+        captchaToken?: string
+      } = {
         shouldCreateUser: true, // Allow new users to sign up
       }
       

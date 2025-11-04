@@ -109,12 +109,22 @@ function VerifyOTPForm() {
     setMessage('')
 
     try {
+      console.log('Resending OTP to email:', email)
+      console.log('Captcha enabled:', isCaptchaEnabled)
+      console.log('Captcha token present:', !!captchaToken)
+      
+      const signInOptions: any = {
+        shouldCreateUser: true, // Allow new users to sign up
+      }
+      
+      if (isCaptchaEnabled && captchaToken) {
+        signInOptions.captchaToken = captchaToken
+        console.log('Including captcha token in resend request')
+      }
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: {
-          shouldCreateUser: true, // Allow new users to sign up
-          captchaToken: isCaptchaEnabled ? captchaToken ?? undefined : undefined,
-        },
+        options: signInOptions,
       })
 
       if (error) {
@@ -140,17 +150,17 @@ function VerifyOTPForm() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <svg 
-              className="w-8 h-8 text-white" 
-              fill="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
-            </svg>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
+            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+          }}>
+            <img
+              src="/Octopus-icon.png"
+              alt="Octopus Icon"
+              className="w-10 h-10"
+            />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Overenie kódu
@@ -198,13 +208,20 @@ function VerifyOTPForm() {
                 ref={captchaRef}
                 sitekey={captchaSiteKey}
                 onVerify={(token) => {
+                  console.log('hCaptcha verified (resend), token received:', token ? 'yes' : 'no')
                   setCaptchaToken(token)
                   if (token) {
                     setMessage('')
                   }
                 }}
-                onExpire={() => setCaptchaToken(null)}
-                onError={() => setCaptchaToken(null)}
+                onExpire={() => {
+                  console.log('hCaptcha expired (resend)')
+                  setCaptchaToken(null)
+                }}
+                onError={(err) => {
+                  console.error('hCaptcha error (resend):', err)
+                  setCaptchaToken(null)
+                }}
               />
             </div>
           )}

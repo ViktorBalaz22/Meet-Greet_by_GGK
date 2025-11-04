@@ -37,12 +37,21 @@ function LoginForm() {
 
     try {
       console.log('Sending OTP to email:', email)
+      console.log('Captcha enabled:', isCaptchaEnabled)
+      console.log('Captcha token present:', !!captchaToken)
+      
+      const signInOptions: any = {
+        shouldCreateUser: true, // Allow new users to sign up
+      }
+      
+      if (isCaptchaEnabled && captchaToken) {
+        signInOptions.captchaToken = captchaToken
+        console.log('Including captcha token in request')
+      }
+      
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: {
-          shouldCreateUser: true, // Allow new users to sign up
-          captchaToken: isCaptchaEnabled ? captchaToken ?? undefined : undefined,
-        },
+        options: signInOptions,
       })
 
       if (error) {
@@ -63,22 +72,22 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-            <svg 
-              className="w-8 h-8 text-white" 
-              fill="currentColor" 
-              viewBox="0 0 24 24"
-            >
-              <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z" />
-            </svg>
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
+            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+          }}>
+            <img
+              src="/Octopus-icon.png"
+              alt="Octopus Icon"
+              className="w-10 h-10"
+            />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Prihlásenie
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 font-bold">
             Zadajte svoj e-mail a pošleme vám 6-miestny overovací kód
           </p>
         </div>
@@ -96,7 +105,8 @@ function LoginForm() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+              className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900"
+              style={{ borderColor: '#232323' }}
               placeholder="vas@email.sk"
             />
           </div>
@@ -107,13 +117,20 @@ function LoginForm() {
                 ref={captchaRef}
                 sitekey={captchaSiteKey}
                 onVerify={(token) => {
+                  console.log('hCaptcha verified, token received:', token ? 'yes' : 'no')
                   setCaptchaToken(token)
                   if (token) {
                     setMessage('')
                   }
                 }}
-                onExpire={() => setCaptchaToken(null)}
-                onError={() => setCaptchaToken(null)}
+                onExpire={() => {
+                  console.log('hCaptcha expired')
+                  setCaptchaToken(null)
+                }}
+                onError={(err) => {
+                  console.error('hCaptcha error:', err)
+                  setCaptchaToken(null)
+                }}
               />
             </div>
           )}
@@ -121,7 +138,10 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            style={{
+              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+            }}
           >
             {loading ? 'Odosielam...' : 'Pošli overovací kód'}
           </button>

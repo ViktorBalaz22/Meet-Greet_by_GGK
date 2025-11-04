@@ -15,10 +15,23 @@ function VerifyOTPForm() {
   const [resendCooldown, setResendCooldown] = useState(0)
   const [captchaToken, setCaptchaToken] = useState<string | null>(null)
   const captchaRef = useRef<HCaptcha | null>(null)
-  const captchaSiteKey = process.env.NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY ?? ''
+  
+  // Get captcha site key - NEXT_PUBLIC_ vars are embedded at build time
+  const captchaSiteKey = process.env.NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY || ''
   const isCaptchaEnabled = captchaSiteKey.length > 0
   const router = useRouter()
   const searchParams = useSearchParams()
+
+  // Debug: Log environment variable availability
+  useEffect(() => {
+    console.log('Captcha Site Key Check (verify-otp):', {
+      hasKey: !!captchaSiteKey,
+      keyLength: captchaSiteKey?.length || 0,
+      keyPreview: captchaSiteKey ? captchaSiteKey.substring(0, 10) + '...' : 'missing',
+      fromEnv: !!process.env.NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY,
+      isEnabled: isCaptchaEnabled,
+    })
+  }, [captchaSiteKey, isCaptchaEnabled])
 
   useEffect(() => {
     const emailParam = searchParams.get('email')

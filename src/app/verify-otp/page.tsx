@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect, Suspense, useCallback } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
 
 function VerifyOTPForm() {
   const [otp, setOtp] = useState('')
@@ -12,6 +13,10 @@ function VerifyOTPForm() {
   const [email, setEmail] = useState('')
   const [resendLoading, setResendLoading] = useState(false)
   const [resendCooldown, setResendCooldown] = useState(0)
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null)
+  const captchaRef = useRef<HCaptcha | null>(null)
+  const captchaSiteKey = process.env.NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY ?? ''
+  const isCaptchaEnabled = captchaSiteKey.length > 0
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -95,6 +100,11 @@ function VerifyOTPForm() {
   const handleResend = async () => {
     if (resendCooldown > 0) return
 
+    if (isCaptchaEnabled && !captchaToken) {
+      setMessage('Prosím potvrďte, že nie ste robot.')
+      return
+    }
+
     setResendLoading(true)
     setMessage('')
 
@@ -103,6 +113,7 @@ function VerifyOTPForm() {
         email,
         options: {
           shouldCreateUser: true, // Allow new users to sign up
+          captchaToken: isCaptchaEnabled ? captchaToken ?? undefined : undefined,
         },
       })
 
@@ -116,26 +127,30 @@ function VerifyOTPForm() {
       setMessage('Nastala neočakávaná chyba')
     } finally {
       setResendLoading(false)
+      if (isCaptchaEnabled) {
+        captchaRef.current?.resetCaptcha()
+        setCaptchaToken(null)
+      }
     }
   }
 
-  const handleOtpChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleOtpChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 6) // Only digits, max 6
     setOtp(value)
-  }, [])
+  }
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8 relative z-10">
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
-            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
-          }}>
-            <img
-              src="/Octopus-icon.png"
-              alt="Octopus Icon"
-              className="w-10 h-10"
-            />
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+            <svg 
+              className="w-8 h-8 text-white" 
+              fill="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z" />
+            </svg>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Overenie kódu
@@ -163,43 +178,47 @@ function VerifyOTPForm() {
               required
               value={otp}
               onChange={handleOtpChange}
-              className="w-full px-4 py-3 text-center text-xl md:text-2xl font-mono border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900 tracking-widest input-container"
-              style={{ 
-                borderColor: '#232323',
-                fontSize: '20px', // Prevent zoom on iOS, smaller on mobile
-                WebkitAppearance: 'none',
-                appearance: 'none',
-                transform: 'translateZ(0)',
-                willChange: 'transform',
-                WebkitFontSmoothing: 'antialiased',
-                MozOsxFontSmoothing: 'grayscale',
-                textRendering: 'optimizeSpeed',
-                backfaceVisibility: 'hidden',
-                WebkitBackfaceVisibility: 'hidden'
-              }}
+              className="w-full px-4 py-3 text-center text-2xl font-mono border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 tracking-widest"
               placeholder="123456"
               maxLength={6}
-              autoFocus
             />
           </div>
 
           <button
             type="submit"
             disabled={loading || otp.length !== 6}
-            className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            style={{
-              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
-            }}
+            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Overujem...' : 'Overiť kód'}
           </button>
+
+          {isCaptchaEnabled && (
+            <div className="flex justify-center">
+              <HCaptcha
+                ref={captchaRef}
+                sitekey={captchaSiteKey}
+                onVerify={(token) => {
+                  setCaptchaToken(token)
+                  if (token) {
+                    setMessage('')
+                  }
+                }}
+                onExpire={() => setCaptchaToken(null)}
+                onError={() => setCaptchaToken(null)}
+              />
+            </div>
+          )}
 
           <div className="text-center">
             <button
               type="button"
               onClick={handleResend}
-              disabled={resendLoading || resendCooldown > 0}
-              className="text-gray-600 hover:text-gray-900 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              disabled={
+                resendLoading ||
+                resendCooldown > 0 ||
+                (isCaptchaEnabled && !captchaToken)
+              }
+              className="text-blue-600 hover:text-blue-500 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {resendLoading 
                 ? 'Odosielam...' 
@@ -224,7 +243,7 @@ function VerifyOTPForm() {
         <div className="text-center">
           <Link 
             href="/login" 
-            className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors duration-200"
+            className="text-blue-600 hover:text-blue-500 text-sm font-medium"
           >
             ← Späť na prihlásenie
           </Link>

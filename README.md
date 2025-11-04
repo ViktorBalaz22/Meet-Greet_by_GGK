@@ -52,6 +52,7 @@ Jednoduchá webová aplikácia pre zdieľanie digitálnych vizitiek na eventoch.
    ```
    NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+  NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY=your_hcaptcha_site_key
    SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
    NEXT_PUBLIC_APP_URL=http://localhost:3000
    ```
@@ -124,6 +125,7 @@ Kompletný postup nájdete v [DEPLOYMENT.md](./DEPLOYMENT.md).
 ```
 NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_anon_key
+NEXT_PUBLIC_SUPABASE_CAPTCHA_SITE_KEY=your_production_hcaptcha_site_key
 SUPABASE_SERVICE_ROLE_KEY=your_production_service_role_key
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
 ```

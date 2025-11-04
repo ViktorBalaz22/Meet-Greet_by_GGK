@@ -39,6 +39,10 @@ function LoginForm() {
       console.log('Sending OTP to email:', email)
       console.log('Captcha enabled:', isCaptchaEnabled)
       console.log('Captcha token present:', !!captchaToken)
+      if (captchaToken) {
+        console.log('Captcha token length:', captchaToken.length)
+        console.log('Captcha token preview:', captchaToken.substring(0, 20) + '...')
+      }
       
       const signInOptions: {
         shouldCreateUser: boolean
@@ -50,14 +54,28 @@ function LoginForm() {
       if (isCaptchaEnabled && captchaToken) {
         signInOptions.captchaToken = captchaToken
         console.log('Including captcha token in request')
+        console.log('Full options object:', JSON.stringify(signInOptions, null, 2))
+      } else if (isCaptchaEnabled && !captchaToken) {
+        console.error('Captcha is enabled but no token available!')
+        setMessage('Prosím vyriešte captcha pred odoslaním.')
+        setLoading(false)
+        return
       }
       
-      const { error } = await supabase.auth.signInWithOtp({
+      console.log('Calling supabase.auth.signInWithOtp...')
+      const { data, error } = await supabase.auth.signInWithOtp({
         email,
         options: signInOptions,
       })
+      
+      console.log('Response received:', { data, error })
 
       if (error) {
+        console.error('SignInWithOtp error details:', {
+          message: error.message,
+          status: error.status,
+          name: error.name,
+        })
         setMessage('Chyba pri odosielaní e-mailu: ' + error.message)
       } else {
         // Redirect to OTP verification page with email parameter
@@ -121,18 +139,26 @@ function LoginForm() {
                 sitekey={captchaSiteKey}
                 onVerify={(token) => {
                   console.log('hCaptcha verified, token received:', token ? 'yes' : 'no')
-                  setCaptchaToken(token)
                   if (token) {
+                    console.log('hCaptcha token length:', token.length)
+                    console.log('hCaptcha token preview:', token.substring(0, 20) + '...')
+                    setCaptchaToken(token)
                     setMessage('')
+                  } else {
+                    console.error('hCaptcha returned null token!')
+                    setCaptchaToken(null)
+                    setMessage('Captcha overenie zlyhalo. Skúste to znova.')
                   }
                 }}
                 onExpire={() => {
                   console.log('hCaptcha expired')
                   setCaptchaToken(null)
+                  setMessage('Captcha vypršal. Prosím vyriešte ho znova.')
                 }}
                 onError={(err) => {
                   console.error('hCaptcha error:', err)
                   setCaptchaToken(null)
+                  setMessage('Chyba pri načítaní captcha. Obnovte stránku.')
                 }}
               />
             </div>

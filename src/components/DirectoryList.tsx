@@ -95,7 +95,7 @@ export default function DirectoryList() {
   if (loading) {
     return (
       <div className="flex justify-center items-center py-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#232323]"></div>
       </div>
     )
   }
@@ -115,7 +115,8 @@ export default function DirectoryList() {
             placeholder="Hľadať podľa mena, firmy, pozície..."
             value={searchQuery}
             onChange={(e) => handleSearch(e.target.value)}
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+            className="block w-full pl-10 pr-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232323] focus:border-transparent text-gray-900"
+            style={{ borderColor: '#232323' }}
           />
         </div>
       </div>

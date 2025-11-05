@@ -180,7 +180,7 @@ function LoginForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+            className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             style={{
               background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
             }}
@@ -218,8 +218,14 @@ export default function LoginPage() {
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
+              background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+            }}>
+              <img
+                src="/Octopus-icon.png"
+                alt="Octopus Icon"
+                className="w-10 h-10"
+              />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
               Načítavam...

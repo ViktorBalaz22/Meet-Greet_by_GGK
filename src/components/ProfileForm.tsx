@@ -493,7 +493,7 @@ export default function ProfileForm({ profile, onProfileSaved }: ProfileFormProp
       <button
         type="submit"
         disabled={loading}
-        className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+        className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         style={{
           background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
         }}

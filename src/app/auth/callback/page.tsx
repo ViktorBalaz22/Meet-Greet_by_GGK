@@ -64,7 +64,7 @@ export default function AuthCallbackPage() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#232323] mx-auto mb-4"></div>
           <p className="text-gray-600">Authenticating...</p>
         </div>
       </div>
@@ -84,7 +84,10 @@ export default function AuthCallbackPage() {
           <p className="text-gray-600 mb-4">{error}</p>
           <button
             onClick={() => router.push('/login')}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="text-white px-4 py-2 rounded-lg transition-colors"
+            style={{
+              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+            }}
           >
             Try Again
           </button>

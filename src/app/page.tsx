@@ -50,7 +50,7 @@ export default function Home() {
           {/* CTA Button */}
           <Link
            href="/login"
-  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+  className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
   style={{
     background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
   }}

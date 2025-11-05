@@ -202,7 +202,7 @@ function LoginForm() {
         <div className="text-center">
           <Link 
             href="/" 
-            className="text-blue-600 hover:text-blue-500 text-sm font-medium"
+            className="text-[#232323] hover:text-[#323232] text-sm font-medium transition-colors"
           >
             ← Späť na úvodnú stránku
           </Link>

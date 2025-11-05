@@ -22,11 +22,9 @@ export default function Home() {
                   height={96}
                   className="w-15 h-20"
                   priority
-                  loading="eager"
-                  quality={95}
+                  quality={85}
                   sizes="96px"
-                  placeholder="blur"
-                  blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+                  fetchPriority="high"
                 />
               </div>
             </div>
@@ -81,13 +79,13 @@ export default function Home() {
                 <Image
                   src="/1-Black.png"
                   alt="Create Profile Icon"
-                  width={24}
-                  height={24}
-                  className="w-18 h-10"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12"
                   priority
-                  quality={90}
-                  sizes="24px"
-                  loading="eager"
+                  quality={80}
+                  sizes="48px"
+                  fetchPriority="high"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">
@@ -106,13 +104,13 @@ export default function Home() {
                 <Image
                   src="/2-Black.png"
                   alt="Search Participants Icon"
-                  width={24}
-                  height={24}
-                  className="w-18 h-10"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12"
                   priority
-                  quality={90}
-                  sizes="24px"
-                  loading="eager"
+                  quality={80}
+                  sizes="48px"
+                  fetchPriority="high"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">
@@ -131,13 +129,13 @@ export default function Home() {
                 <Image
                   src="/3-Black.png"
                   alt="Share Contacts Icon"
-                  width={24}
-                  height={24}
-                  className="w-18 h-10"
+                  width={48}
+                  height={48}
+                  className="w-12 h-12"
                   priority
-                  quality={90}
-                  sizes="24px"
-                  loading="eager"
+                  quality={80}
+                  sizes="48px"
+                  fetchPriority="high"
                 />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">

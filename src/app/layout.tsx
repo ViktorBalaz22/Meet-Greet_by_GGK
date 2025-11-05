@@ -48,22 +48,10 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
-        {/* Preload critical images for main page */}
+        {/* Preload critical images for main page - high priority */}
         <link
           rel="preload"
           href="/Octopus-icon.png"
-          as="image"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          href="/bg.png"
-          as="image"
-          type="image/png"
-        />
-        <link
-          rel="preload"
-          href="/mobile-bg.png"
           as="image"
           type="image/png"
         />
@@ -85,6 +73,8 @@ export default function RootLayout({
           as="image"
           type="image/png"
         />
+        {/* DNS prefetch for external resources if needed */}
+        <link rel="dns-prefetch" href="https://js.hcaptcha.com" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

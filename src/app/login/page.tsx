@@ -190,7 +190,11 @@ function LoginForm() {
 
           {message && (
             <div className={`text-sm text-center p-3 rounded-lg ${
-              message.includes('Chyba') || message.includes('chyba') 
+              message.includes('Chyba') || 
+              message.includes('chyba') || 
+              message.includes('robot') ||
+              message.includes('captcha') ||
+              message.includes('Captcha')
                 ? 'bg-red-50 text-red-700' 
                 : 'bg-green-50 text-green-700'
             }`}>

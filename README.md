@@ -1,4 +1,4 @@
-# Event Business Cards
+# Meet & Greet by GGK
 
 Jednoduchá webová aplikácia pre zdieľanie digitálnych vizitiek na eventoch. Hostia sa prihlásia cez magic link, vyplnia svoj profil a môžu si prehliadať a stiahnuť kontakty ostatných účastníkov.
 
@@ -103,6 +103,7 @@ Jednoduchá webová aplikácia pre zdieľanie digitálnych vizitiek na eventoch.
 - **Storage policies** - Používatelia môžu nahrávať len svoje fotky
 - **Magic link autentifikácia** - Žiadne heslá
 - **GDPR compliance** - Povinný súhlas so spracovaním údajov
+- **hCaptcha** - Ochrana pred nežiadúcou interakciou aplikácie s botmi a automatizovanými navstevami
 
 ## 🚀 Deployment
 

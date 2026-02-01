@@ -19,7 +19,7 @@ export default function Home() {
           <div className="mb-12 pt-15">
             <div className="relative inline-block main-page-logo">
               {theme.mainPageLogoNoCircle ? (
-                <div className="mx-auto mb-3 flex items-center justify-center image-container">
+                <div className="mx-auto mb-4 flex items-center justify-center image-container">
                   <Image
                     src={logo}
                     alt={logoAlt}
@@ -56,7 +56,7 @@ export default function Home() {
 
             <div className="flex justify-center mb-2">
               <div className="text-center">
-                <h1 className="text-4xl md:text-5xl text-gray-900 mb-1 font-bold">
+                <h1 className={`text-4xl md:text-5xl text-gray-900 font-bold ${theme.mainPageLogoNoCircle ? "mb-2" : "mb-1"}`}>
                   {frontPage.title}
                 </h1>
                 <p className="text-sm text-gray-500 font-normal">
@@ -93,7 +93,7 @@ export default function Home() {
 
           {/* Features */}
           <div className="mt-10 mb-15 grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
-            {frontPage.features.map((feature) => (
+            {frontPage.features.map((feature, index) => (
               <div
                 key={feature.title}
                 className="p-5 bg-gray-50 rounded-lg"
@@ -103,17 +103,23 @@ export default function Home() {
                   className="w-12 h-12 rounded-lg flex items-center justify-center mb-3"
                   style={{ background: "#ffffffff" }}
                 >
-                  <Image
-                    src={feature.icon}
-                    alt={feature.iconAlt}
-                    width={48}
-                    height={48}
-                    className="w-12 h-12 object-contain"
-                    priority
-                    quality={80}
-                    sizes="48px"
-                    fetchPriority="high"
-                  />
+                  {theme.mainPageLogoNoCircle ? (
+                    <span className="text-2xl font-bold text-gray-900 leading-none">
+                      {index + 1}
+                    </span>
+                  ) : (
+                    <Image
+                      src={feature.icon}
+                      alt={feature.iconAlt}
+                      width={48}
+                      height={48}
+                      className="w-12 h-12 object-contain"
+                      priority
+                      quality={80}
+                      sizes="48px"
+                      fetchPriority="high"
+                    />
+                  )}
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-1 leading-snug">
                   {feature.title}

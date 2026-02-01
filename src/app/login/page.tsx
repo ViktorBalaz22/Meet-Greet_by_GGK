@@ -112,18 +112,31 @@ function LoginForm() {
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center overflow-hidden" style={{
-            background: theme.colors.logoContainerStyle,
-          }}>
-            <Image
-              src={theme.logo}
-              alt={theme.logoAlt}
-              width={40}
-              height={40}
-              className="w-10 h-10 object-contain"
-              unoptimized={theme.logo.endsWith('.svg')}
-            />
-          </div>
+          {theme.mainPageLogoNoCircle ? (
+            <div className="mx-auto mb-4 flex items-center justify-center">
+              <Image
+                src={theme.logo}
+                alt={theme.logoAlt}
+                width={160}
+                height={55}
+                className="h-14 w-auto object-contain"
+                unoptimized={theme.logo.endsWith('.svg')}
+              />
+            </div>
+          ) : (
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center overflow-hidden" style={{
+              background: theme.colors.logoContainerStyle,
+            }}>
+              <Image
+                src={theme.logo}
+                alt={theme.logoAlt}
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain"
+                unoptimized={theme.logo.endsWith('.svg')}
+              />
+            </div>
+          )}
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
             Prihlásenie
           </h2>

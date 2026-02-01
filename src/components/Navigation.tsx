@@ -67,18 +67,31 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/app" className="flex items-center">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 overflow-hidden" style={{
-                background: theme.colors.logoContainerStyle,
-              }}>
-                <Image
-                  src={theme.logo}
-                  alt={theme.logoAlt}
-                  width={24}
-                  height={24}
-                  className="w-6 h-6 object-contain"
-                  unoptimized={theme.logo.endsWith('.svg')}
-                />
-              </div>
+              {theme.mainPageLogoNoCircle ? (
+                <div className="mr-3 flex h-8 items-center justify-center overflow-hidden">
+                  <Image
+                    src={theme.logo}
+                    alt={theme.logoAlt}
+                    width={80}
+                    height={28}
+                    className="h-7 w-auto object-contain"
+                    unoptimized={theme.logo.endsWith('.svg')}
+                  />
+                </div>
+              ) : (
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 overflow-hidden" style={{
+                  background: theme.colors.logoContainerStyle,
+                }}>
+                  <Image
+                    src={theme.logo}
+                    alt={theme.logoAlt}
+                    width={24}
+                    height={24}
+                    className="w-6 h-6 object-contain"
+                    unoptimized={theme.logo.endsWith('.svg')}
+                  />
+                </div>
+              )}
               <span className="text-xl text-gray-900 font-bold">Meet&Greet</span>
             </Link>
           </div>

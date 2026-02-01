@@ -19,7 +19,7 @@ export default function Home() {
           <div className="mb-12 pt-15">
             <div className="relative inline-block main-page-logo">
               {theme.mainPageLogoNoCircle ? (
-                <div className="mx-auto mb-4 flex items-center justify-center image-container">
+                <div className="mx-auto mb-2 flex items-center justify-center image-container">
                   <Image
                     src={logo}
                     alt={logoAlt}

@@ -77,7 +77,7 @@ const AUDI_FRONT_PAGE: ThemeFrontPage = {
   ctaText: "Pokračovať na prihlásenie",
   features: [
     {
-      title: "Vytvorte profil",
+      title: "Vytvorte si svoj profil",
       description: "Vaše údaje a fotka v jednej digitálnej vizitke",
       icon: "/1-Black.png",
       iconAlt: "Create Profile Icon",

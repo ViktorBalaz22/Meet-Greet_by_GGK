@@ -235,13 +235,15 @@ export default function VerifyOTPPage() {
       <div className="min-h-screen bg-white flex flex-col items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8">
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center overflow-hidden" style={{
               background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
             }}>
-              <img
+              <Image
                 src="/Octopus-icon.png"
                 alt="Octopus Icon"
-                className="w-10 h-10"
+                width={40}
+                height={40}
+                className="w-10 h-10 object-contain"
               />
             </div>
             <h2 className="text-3xl font-bold text-gray-900 mb-2">

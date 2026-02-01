@@ -3,10 +3,13 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Navigation() {
   const { supabase, user } = useSupabase()
+  const { theme } = useTheme()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -64,13 +67,16 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/app" className="flex items-center">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3" style={{
-                background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3 overflow-hidden" style={{
+                background: theme.colors.logoContainerStyle,
               }}>
-                <img
-                  src="/Octopus-icon.png"
-                  alt="Octopus Icon"
-                  className="w-6 h-6"
+                <Image
+                  src={theme.logo}
+                  alt={theme.logoAlt}
+                  width={24}
+                  height={24}
+                  className="w-6 h-6 object-contain"
+                  unoptimized={theme.logo.endsWith('.svg')}
                 />
               </div>
               <span className="text-xl text-gray-900 font-bold">Meet&Greet</span>

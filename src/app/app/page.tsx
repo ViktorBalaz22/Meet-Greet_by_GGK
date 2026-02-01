@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Profile } from '@/lib/types'
 import { useSupabase } from '@/contexts/SupabaseContext'
+import { useTheme } from '@/contexts/ThemeContext'
 import ProfileForm from '@/components/ProfileForm'
 import DirectoryList from '@/components/DirectoryList'
 import Navigation from '@/components/Navigation'
@@ -11,6 +12,7 @@ import Navigation from '@/components/Navigation'
 export default function AppPage() {
   const router = useRouter()
   const { supabase, user, loading: authLoading } = useSupabase()
+  const { theme } = useTheme()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
   const [refreshKey, setRefreshKey] = useState(0)
@@ -71,7 +73,7 @@ export default function AppPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#232323] mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 mx-auto mb-4" style={{ borderColor: theme.colors.primary }}></div>
           <p className="text-gray-600">Načítavam...</p>
         </div>
       </div>

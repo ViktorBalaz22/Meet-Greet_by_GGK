@@ -4,8 +4,11 @@ import { useState, useEffect, Suspense } from 'react'
 import { supabase } from '@/lib/supabase'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Image from 'next/image'
+import { useTheme } from '@/contexts/ThemeContext'
 
 function VerifyOTPForm() {
+  const { theme } = useTheme()
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -128,13 +131,16 @@ function VerifyOTPForm() {
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
-            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center overflow-hidden" style={{
+            background: theme.colors.logoContainerStyle,
           }}>
-            <img
-              src="/Octopus-icon.png"
-              alt="Octopus Icon"
-              className="w-10 h-10"
+            <Image
+              src={theme.logo}
+              alt={theme.logoAlt}
+              width={40}
+              height={40}
+              className="w-10 h-10 object-contain"
+              unoptimized={theme.logo.endsWith('.svg')}
             />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -163,8 +169,8 @@ function VerifyOTPForm() {
               required
               value={otp}
               onChange={handleOtpChange}
-              className="w-full px-4 py-3 text-center text-2xl font-mono border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#232323] focus:border-transparent text-gray-900 tracking-widest"
-              style={{ borderColor: '#232323' }}
+              className="w-full px-4 py-3 text-center text-2xl font-mono border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:border-transparent text-gray-900 tracking-widest"
+              style={{ borderColor: theme.colors.primary }}
               placeholder="123456"
               maxLength={6}
             />
@@ -175,7 +181,7 @@ function VerifyOTPForm() {
             disabled={loading || otp.length !== 6}
             className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             style={{
-              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+              background: theme.colors.buttonGradient,
             }}
           >
             {loading ? 'Overujem...' : 'Overiť kód'}
@@ -186,7 +192,8 @@ function VerifyOTPForm() {
               type="button"
               onClick={handleResend}
               disabled={resendLoading || resendCooldown > 0}
-              className="text-[#232323] hover:text-[#323232] text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ color: theme.colors.primary }}
+              className="hover:opacity-80 text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {resendLoading 
                 ? 'Odosielam...' 
@@ -211,7 +218,8 @@ function VerifyOTPForm() {
         <div className="text-center">
           <Link 
             href="/login" 
-            className="text-[#232323] hover:text-[#323232] text-sm font-medium transition-colors"
+            style={{ color: theme.colors.primary }}
+            className="hover:opacity-80 text-sm font-medium transition-colors"
           >
             ← Späť na prihlásenie
           </Link>

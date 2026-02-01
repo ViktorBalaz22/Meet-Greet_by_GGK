@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SupabaseProvider } from "@/contexts/SupabaseContext";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,12 +76,35 @@ export default function RootLayout({
         />
         {/* DNS prefetch for external resources if needed */}
         <link rel="dns-prefetch" href="https://js.hcaptcha.com" />
+        {/* Theme applied before paint to avoid flash (persisted in localStorage) */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+(function(){
+  try {
+    var id = localStorage.getItem('meetgreet-theme');
+    if (id === 'audi') {
+      var d = document.documentElement;
+      d.setAttribute('data-theme', 'audi');
+      d.style.setProperty('--theme-primary', '#000000');
+      d.style.setProperty('--theme-primary-dark', '#1a1a1a');
+      d.style.setProperty('--theme-button-gradient', 'linear-gradient(135deg, #bb0a30 0%, #8b0823 100%)');
+      d.style.setProperty('--theme-logo-container', 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)');
+      d.style.setProperty('--theme-font-family', 'Outfit, sans-serif');
+    }
+  } catch (e) {}
+})();
+`,
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SupabaseProvider>
-          {children}
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </SupabaseProvider>
       </body>
     </html>

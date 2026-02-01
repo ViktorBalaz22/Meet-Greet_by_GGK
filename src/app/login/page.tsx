@@ -3,10 +3,13 @@
 import { useState, useEffect, Suspense, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSearchParams } from 'next/navigation'
 import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { useTheme } from '@/contexts/ThemeContext'
 
 function LoginForm() {
+  const { theme } = useTheme()
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
@@ -109,13 +112,16 @@ function LoginForm() {
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8 relative z-10">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{
-            background: "linear-gradient(135deg, #232323 75%, #232323 100%)",
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center overflow-hidden" style={{
+            background: theme.colors.logoContainerStyle,
           }}>
-            <img
-              src="/Octopus-icon.png"
-              alt="Octopus Icon"
-              className="w-10 h-10"
+            <Image
+              src={theme.logo}
+              alt={theme.logoAlt}
+              width={40}
+              height={40}
+              className="w-10 h-10 object-contain"
+              unoptimized={theme.logo.endsWith('.svg')}
             />
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2">
@@ -140,7 +146,7 @@ function LoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-3 py-2 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-gray-900"
-              style={{ borderColor: '#232323' }}
+              style={{ borderColor: theme.colors.primary }}
               placeholder="vas@email.sk"
             />
           </div>
@@ -182,7 +188,7 @@ function LoginForm() {
             disabled={loading}
             className="w-full flex justify-center py-4 px-8 text-white font-semibold rounded-lg transition-colors duration-200 text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
             style={{
-              background: "radial-gradient(ellipse at bottom, #323232 0%, #232323 100%)",
+              background: theme.colors.buttonGradient,
             }}
           >
             {loading ? 'Odosielam...' : 'Pošli overovací kód'}
@@ -206,7 +212,8 @@ function LoginForm() {
         <div className="text-center">
           <Link 
             href="/" 
-            className="text-[#232323] hover:text-[#323232] text-sm font-medium transition-colors"
+            style={{ color: theme.colors.primary }}
+            className="hover:opacity-80 text-sm font-medium transition-colors"
           >
             ← Späť na úvodnú stránku
           </Link>

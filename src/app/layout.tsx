@@ -104,7 +104,7 @@ export default function RootLayout({
       d.style.setProperty('--theme-primary-dark', '#1a1a1a');
       d.style.setProperty('--theme-button-gradient', 'linear-gradient(135deg, #bb0a30 0%, #8b0823 100%)');
       d.style.setProperty('--theme-logo-container', 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)');
-      d.style.setProperty('--theme-font-family', 'Audi Type Extended, sans-serif');
+      d.style.setProperty('--theme-font-family', "Audi Type Extended, Outfit, sans-serif");
     }
   } catch (e) {}
 })();

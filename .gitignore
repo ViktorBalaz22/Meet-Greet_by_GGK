@@ -39,7 +39,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Audi Type font (proprietary – add locally via scripts/copy-audi-fonts.sh)
-public/fonts/AudiType-ExtendedNormal.ttf
-public/fonts/AudiType-ExtendedBold.ttf

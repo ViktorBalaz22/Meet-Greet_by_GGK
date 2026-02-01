@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* Fallback when Audi Type TTF files are not present (e.g. on Vercel) */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
 
 /* Wolpe Pegasus Font Faces */
 @font-face {
@@ -60,7 +62,7 @@
   --theme-logo-container: linear-gradient(135deg, #232323 75%, #232323 100%);
   --theme-font-family: 'Wolpe Pegasus', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-wolpe-pegasus: 'Wolpe Pegasus', sans-serif;
-  --font-audi: 'Audi Type Extended', sans-serif;
+  --font-audi: 'Audi Type Extended', 'Outfit', sans-serif;
 }
 
 @theme inline {

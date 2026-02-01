@@ -30,6 +30,8 @@ export interface ThemeConfig {
   logoAlt: string;
   /** Favicon path for browser tab */
   favicon: string;
+  /** If true, main page shows logo only (no circle behind it) */
+  mainPageLogoNoCircle?: boolean;
   colors: {
     primary: string;
     primaryDark: string;
@@ -71,8 +73,8 @@ const MULLENLOWE_FRONT_PAGE: ThemeFrontPage = {
 const AUDI_FRONT_PAGE: ThemeFrontPage = {
   title: "Meet&Greet",
   subtitle: "by Audi",
-  tagline: "Digitálne vizitky a networking na vašich eventoch",
-  ctaText: "Prihlásiť sa",
+  tagline: "Pripojte sa k účastníkom Audi quattro cup a zdieľajte svoje digitálne vizitky",
+  ctaText: "Pokračovať na prihlásenie",
   features: [
     {
       title: "Vytvorte profil",
@@ -103,6 +105,7 @@ export const THEMES: Record<ThemeId, ThemeConfig> = {
     logo: "/Octopus-icon.png",
     logoAlt: "MullenLowe GGK",
     favicon: "/Octopus-icon.png",
+    mainPageLogoNoCircle: false,
     colors: {
       primary: "#232323",
       primaryDark: "#323232",
@@ -118,6 +121,7 @@ export const THEMES: Record<ThemeId, ThemeConfig> = {
     logo: "/audi-logo.svg",
     logoAlt: "Audi",
     favicon: "/audi-logo.svg",
+    mainPageLogoNoCircle: true,
     colors: {
       primary: "#000000",
       primaryDark: "#1a1a1a",

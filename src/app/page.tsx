@@ -15,26 +15,43 @@ export default function Home() {
 
       <div className="flex flex-col items-center justify-center min-h-screen px-4 md:px-[100px] relative z-10">
         <main className="text-center max-w-2xl mx-auto w-full flex flex-col items-center justify-center">
-          {/* Animated Logo */}
+          {/* Logo: circle + icon (MullenLowe) or logo only (e.g. Audi rings) */}
           <div className="mb-12 pt-15">
             <div className="relative inline-block main-page-logo">
-              <div
-                className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center image-container"
-                style={{ background: colors.logoContainerStyle }}
-              >
-                <Image
-                  src={logo}
-                  alt={logoAlt}
-                  width={96}
-                  height={96}
-                  className="w-15 h-20 object-contain"
-                  priority
-                  quality={85}
-                  sizes="96px"
-                  fetchPriority="high"
-                  unoptimized={logo.endsWith(".svg")}
-                />
-              </div>
+              {theme.mainPageLogoNoCircle ? (
+                <div className="mx-auto mb-6 flex items-center justify-center image-container">
+                  <Image
+                    src={logo}
+                    alt={logoAlt}
+                    width={200}
+                    height={69}
+                    className="h-16 w-auto object-contain"
+                    priority
+                    quality={85}
+                    sizes="(max-width: 768px) 160px, 200px"
+                    fetchPriority="high"
+                    unoptimized={logo.endsWith(".svg")}
+                  />
+                </div>
+              ) : (
+                <div
+                  className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center image-container"
+                  style={{ background: colors.logoContainerStyle }}
+                >
+                  <Image
+                    src={logo}
+                    alt={logoAlt}
+                    width={96}
+                    height={96}
+                    className="w-15 h-20 object-contain"
+                    priority
+                    quality={85}
+                    sizes="96px"
+                    fetchPriority="high"
+                    unoptimized={logo.endsWith(".svg")}
+                  />
+                </div>
+              )}
             </div>
 
             <div className="flex justify-center mb-2">

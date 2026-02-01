@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
 
 /* Wolpe Pegasus Font Faces */
 @font-face {
@@ -34,6 +33,23 @@
   font-display: swap;
 }
 
+/* Audi Type Extended (official Audi font) */
+@font-face {
+  font-family: 'Audi Type Extended';
+  src: url('/fonts/AudiType-ExtendedNormal.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Audi Type Extended';
+  src: url('/fonts/AudiType-ExtendedBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -44,7 +60,7 @@
   --theme-logo-container: linear-gradient(135deg, #232323 75%, #232323 100%);
   --theme-font-family: 'Wolpe Pegasus', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-wolpe-pegasus: 'Wolpe Pegasus', sans-serif;
-  --font-audi: 'Outfit', sans-serif;
+  --font-audi: 'Audi Type Extended', sans-serif;
 }
 
 @theme inline {

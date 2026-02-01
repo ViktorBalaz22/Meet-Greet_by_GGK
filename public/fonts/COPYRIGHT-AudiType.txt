@@ -1,0 +1,28 @@
+Audi Type Extended font
+=======================
+
+The Audi Type Extended font files (AudiType-ExtendedNormal.ttf and
+AudiType-ExtendedBold.ttf) are not included in this repository.
+
+Copyright and licensing
+----------------------
+Designed by Paul van der Laan & Pieter van Rosmalen 2008.
+Produced by Bold Monday.
+For exclusive use by AUDI AG and its affiliates only.
+
+The font is proprietary. Do not redistribute. If you have obtained the
+font through official Audi channels, you may add the files locally for
+development and deployment of this Meet&Greet Audi-themed instance.
+
+How to add the font locally
+---------------------------
+Place the following files in this directory (public/fonts/):
+
+  - auditype_extendednormal.ttf  →  AudiType-ExtendedNormal.ttf
+  - auditype_extendedbold.ttf    →  AudiType-ExtendedBold.ttf
+
+Or run from the project root:
+
+  sh scripts/copy-audi-fonts.sh
+
+(Requires the font files to be in ~/Downloads/Audi Type/.)

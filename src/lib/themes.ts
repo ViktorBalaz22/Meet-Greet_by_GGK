@@ -117,7 +117,7 @@ export const THEMES: Record<ThemeId, ThemeConfig> = {
     fontFamily: "var(--font-audi), sans-serif",
     logo: "/audi-logo.svg",
     logoAlt: "Audi",
-    favicon: "/audi-favicon.svg",
+    favicon: "/audi-logo.svg",
     colors: {
       primary: "#000000",
       primaryDark: "#1a1a1a",

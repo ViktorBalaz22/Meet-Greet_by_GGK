@@ -49,6 +49,20 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
+        <link
+          rel="preload"
+          href="/fonts/AudiType-ExtendedNormal.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/AudiType-ExtendedBold.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
         {/* Preload critical images for main page - high priority */}
         <link
           rel="preload"
@@ -90,7 +104,7 @@ export default function RootLayout({
       d.style.setProperty('--theme-primary-dark', '#1a1a1a');
       d.style.setProperty('--theme-button-gradient', 'linear-gradient(135deg, #bb0a30 0%, #8b0823 100%)');
       d.style.setProperty('--theme-logo-container', 'linear-gradient(135deg, #000000 0%, #1a1a1a 100%)');
-      d.style.setProperty('--theme-font-family', 'Outfit, sans-serif');
+      d.style.setProperty('--theme-font-family', 'Audi Type Extended, sans-serif');
     }
   } catch (e) {}
 })();

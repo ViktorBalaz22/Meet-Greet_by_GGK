@@ -35,10 +35,10 @@
   font-display: swap;
 }
 
-/* Audi Type Extended (official Audi font) */
+/* Audi Type Extended (official Audi font) – filenames must match public/fonts/ exactly (case-sensitive on Vercel) */
 @font-face {
   font-family: 'Audi Type Extended';
-  src: url('/fonts/AudiType-ExtendedNormal.ttf') format('truetype');
+  src: url('/fonts/auditype_extendednormal.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -46,7 +46,7 @@
 
 @font-face {
   font-family: 'Audi Type Extended';
-  src: url('/fonts/AudiType-ExtendedBold.ttf') format('truetype');
+  src: url('/fonts/auditype_extendedbold.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -86,6 +86,12 @@ body {
   color: var(--foreground);
   font-family: var(--theme-font-family);
   font-weight: 400;
+}
+
+/* Force Audi font and styling when theme is Audi (ensures production applies correctly) */
+[data-theme="audi"] body,
+[data-theme="audi"] {
+  font-family: 'Audi Type Extended', 'Outfit', sans-serif;
 }
 
 /* Optimize input performance with system fonts */

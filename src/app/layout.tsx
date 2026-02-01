@@ -51,14 +51,14 @@ export default function RootLayout({
         />
         <link
           rel="preload"
-          href="/fonts/AudiType-ExtendedNormal.ttf"
+          href="/fonts/auditype_extendednormal.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/AudiType-ExtendedBold.ttf"
+          href="/fonts/auditype_extendedbold.ttf"
           as="font"
           type="font/ttf"
           crossOrigin="anonymous"

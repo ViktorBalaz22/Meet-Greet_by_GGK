@@ -73,7 +73,7 @@ const MULLENLOWE_FRONT_PAGE: ThemeFrontPage = {
 const AUDI_FRONT_PAGE: ThemeFrontPage = {
   title: "Meet&Greet",
   subtitle: "by Audi",
-  tagline: "Pripojte sa k účastníkom Audi quattro cup a zdieľajte svoje digitálne vizitky",
+  tagline: "Pripojte sa k účastníkom Audi quattro Cup a zdieľajte svoje digitálne vizitky",
   ctaText: "Pokračovať na prihlásenie",
   features: [
     {
